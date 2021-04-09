@@ -82,6 +82,14 @@
             <div class="content">
                 <div class="title m-b-md">
                     Laravel
+
+                    <?php if (!is_null(App\SampleObject::first())) { ?>
+                    <?php     $sampleObjectContent = App\SampleObject::first()->content; ?>
+                    <?php     if (!is_null($sampleObjectContent)) { ?>
+                    <?php         $sampleObjectPrintString = nl2br(htmlspecialchars(PHP_EOL . $sampleObjectContent . PHP_EOL, ENT_QUOTES, "UTF-8")); ?>
+                    <?php         print $sampleObjectPrintString; ?>
+                    <?php     } ?>
+                    <?php } ?>
                 </div>
 
                 <div class="links">
