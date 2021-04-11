@@ -12,3 +12,5 @@
 */
 
 Route::get('/', 'SampleObjectsController@index');    // 上書き
+
+Route::resource('sample_objects', 'SampleObjectsController', ['only' => ['index', 'store']]);
