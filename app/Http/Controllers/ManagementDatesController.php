@@ -29,7 +29,7 @@ class ManagementDatesController extends Controller
     {
         // バリデーション
         $request->validate([
-            'date'                => 'required | date',
+            'date'                => 'required | date | unique:dates',
             'name'                => 'required | max:127',
             'description'         => 'required | max:511',
             'selected_image_file' => 'required | mimes:jpeg,jpg,gif,png,bmp | max:2048',
@@ -72,5 +72,44 @@ class ManagementDatesController extends Controller
         
         // 管理者ページトップへリダイレクト
         return redirect('/management/base');
+    }
+    
+    public function createSameDish($dish_id)
+    {
+        // dish_idの値でDishを検索して取得
+        $dish = Dish::findOrFail($dish_id);
+        
+        return view('management.dates.CreateSameDish', ['dish' => $dish]);
+    }
+    
+    public function storeSameDish(Request $request, $dish_id)
+    {
+        // バリデーション
+        $request->validate([
+            'date'                => 'required | date | unique:dates',
+        ]);
+        
+        // dish_idの値でDishを検索して取得
+        $dish = Dish::findOrFail($dish_id);
+        
+        // データベースに保存する
+        $dish->dates()->create([
+            'date' => $request->date,  // 年-月-日(例2021-04-12)だけだと時:分:秒には0が入るようだ
+        ]);
+        
+        // 管理者ページトップへリダイレクト
+        return redirect('/management/base');
+    }
+    
+    public function destroy($id)
+    {
+        // idの値でDateを検索して取得
+        $date = Date::findOrFail($id);
+        
+        // Dateを削除
+        $date->delete();
+        
+        // 前のURLへリダイレクト
+        return back();
     }
 }

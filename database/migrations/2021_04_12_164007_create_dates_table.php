@@ -16,11 +16,11 @@ class CreateDatesTable extends Migration
         Schema::create('dates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('dish_id');
-            $table->timestamp('date');
+            $table->timestamp('date')->unique();
             $table->timestamps();
             
             // 外部キー制約
-            $table->foreign('dish_id')->references('id')->on('dishes');
+            $table->foreign('dish_id')->references('id')->on('dishes')->onDelete('cascade');;
         });
     }
 

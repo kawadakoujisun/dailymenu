@@ -21,6 +21,11 @@
                     <div>
                         {!! nl2br(e($dish->description)) !!}
                     </div>
+                    <div>
+                        {!! Form::open(['route' => ['management.dates.destroy', $date->id], 'method' => 'delete']) !!}
+                            {!! Form::submit('この日付を削除（料理は削除しない）', ['class' => 'btn btn-danger']) !!}
+                        {!! Form::close() !!}
+                    </div>
                 </li>
             @endforeach
         </ul>
