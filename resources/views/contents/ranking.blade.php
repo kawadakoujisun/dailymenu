@@ -45,6 +45,9 @@
         </ul>
     @endif
     
+    {{-- ページネーションのリンク --}}
+    {{ $dishes->links() }}       
+    
     {!! link_to_route('contents.GetRanking', 'ランキング') !!}
     <a href="/">食堂の日替わりメニュー</a>
     

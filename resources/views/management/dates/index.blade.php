@@ -35,6 +35,9 @@
         </ul>
     @endif
     
+    {{-- ページネーションのリンク --}}
+    {{ $dates->links() }}    
+    
     {!! link_to_route('management.base.index', '食堂の日替わりメニュー　管理者ページ') !!}
     <a href="/">公開ページ</a>
     
