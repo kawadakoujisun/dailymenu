@@ -18,7 +18,7 @@ class ContentsController extends Controller
         return view('contents.index', ['dates' => $dates]);
     }
     
-    public function getRanking()
+    public function getRankingOfRequestCount()
     {
         // Dish一覧をidの降順で取得
         $dishes = Dish::orderBy('id', 'desc')->paginate(7);
@@ -27,18 +27,34 @@ class ContentsController extends Controller
         return view('contents.ranking', ['dishes' => $dishes, 'order_key' => 0]);
     }
     
+    public function getRankingOfAppearanceCount()
+    {
+        // Dish一覧をidの昇順で取得
+        $dishes = Dish::orderBy('id', 'asc')->paginate(7);
+
+        // Dish一覧ビュー
+        return view('contents.ranking', ['dishes' => $dishes, 'order_key' => 1]);
+    }    
+    
+    public function getRankingOfRecentAppearance()
+    {
+        // Dish一覧をidの昇順で取得
+        $dishes = Dish::orderBy('id', 'asc')->paginate(7);
+
+        // Dish一覧ビュー
+        return view('contents.ranking', ['dishes' => $dishes, 'order_key' => 2]);
+    }
+    
     public function postRanking(Request $request)
     {
-        $dishes = null;
+        // 他のルートへリダイレクト
         if ($request->order == 0) {
-            // Dish一覧をidの降順で取得
-            $dishes = Dish::orderBy('id', 'desc')->paginate(7);
-        } else {
-            $dishes = Dish::orderBy('id', 'asc')->paginate(7);
+            return redirect()->route('contents.GetRankingOfRequestCount');
+        } else if ($request->order == 1) {
+            return redirect()->route('contents.GetRankingOfAppearanceCount');
+        } else {  // ($request->order == 2)
+            return redirect()->route('contents.GetRankingOfRecentAppearance');
         }
-        
-        // Dish一覧ビュー
-        return view('contents.ranking', ['dishes' => $dishes, 'order_key' => $request->order]);
     }
     
     public function RequestDish($dish_id)

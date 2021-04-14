@@ -33,7 +33,7 @@
     {{-- ページネーションのリンク --}}
     {{ $dates->links() }}    
     
-    {!! link_to_route('contents.GetRanking', 'ランキング') !!}
+    {!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング') !!}
     <a href="/">食堂の日替わりメニュー</a>
     
 @endsection
