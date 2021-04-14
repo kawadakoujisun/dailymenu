@@ -20,4 +20,12 @@ class Dish extends Model
     {
         return $this->hasMany(Date::class);
     }
+    
+    /**
+     * このDishが所有するRequestCount。（RequestCountモデルとの関係を定義）
+     */
+    public function requestCount()
+    {
+        return $this->hasOne(RequestCount::class);
+    }
 }

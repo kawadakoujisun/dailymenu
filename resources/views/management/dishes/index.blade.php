@@ -13,6 +13,10 @@
                         <img src="{{ $dish->image_url }}">
                     </div>
                     <div>
+                        {!! link_to_route('management.dishes.ResetRequestCount', 'リクエストカウントをリセット', ['id' => $dish->id], ['class' => 'btn btn-light']) !!}
+                        {{ $dish->requestCount->request_count }}
+                    </div>
+                    <div>
                         {!! nl2br(e($dish->description)) !!}
                     </div>
                     <div>

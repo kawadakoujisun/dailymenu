@@ -70,6 +70,11 @@ class ManagementDatesController extends Controller
             'date' => $request->date,  // 年-月-日(例2021-04-12)だけだと時:分:秒には0が入るようだ
         ]);
         
+        $dish->requestCount()->create([
+            'request_count'       => 0,
+            'total_request_count' => 0,
+        ]);
+        
         // 管理者ページトップへリダイレクト
         return redirect('/management/base');
     }

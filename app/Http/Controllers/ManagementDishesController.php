@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Cloudinary\Cloudinary;  // vendorにあるcloudinaryを追加
 
-use App\Dish;  // 追加
+use App\Dish;          // 追加
 
 class ManagementDishesController extends Controller
 {
@@ -104,6 +104,22 @@ class ManagementDishesController extends Controller
 
         // Dishを削除
         $dish->delete();
+        
+        // 前のURLへリダイレクト
+        return back();
+    }
+    
+    public function ResetRequestCount($id)
+    {
+        // idの値でDishを検索して取得
+        $dish = Dish::findOrFail($id);
+        
+        // RequestCountを取得
+        $requestCount = $dish->requestCount;
+        // リクエストカウントをリセットする
+        $requestCount->resetRequestCount();
+        // データベースに保存する
+        $requestCount->save();
         
         // 前のURLへリダイレクト
         return back();

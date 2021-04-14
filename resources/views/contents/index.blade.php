@@ -1,4 +1,4 @@
-@extends('management.layouts.app')
+@extends('layouts.app')
 
 @section('content')
 
@@ -19,23 +19,18 @@
                         <img src="{{ $dish->image_url }}">
                     </div>
                     <div>
-                        {!! link_to_route('management.dishes.ResetRequestCount', 'リクエストカウントをリセット', ['id' => $dish->id], ['class' => 'btn btn-light']) !!}
+                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $dish->id], ['class' => 'btn btn-light']) !!}
                         {{ $dish->requestCount->request_count }}
                     </div>
                     <div>
                         {!! nl2br(e($dish->description)) !!}
-                    </div>
-                    <div>
-                        {!! Form::open(['route' => ['management.dates.destroy', $date->id], 'method' => 'delete']) !!}
-                            {!! Form::submit('この日付を削除（料理は削除しない）', ['class' => 'btn btn-danger']) !!}
-                        {!! Form::close() !!}
                     </div>
                 </li>
             @endforeach
         </ul>
     @endif
     
-    {!! link_to_route('management.base.index', '食堂の日替わりメニュー　管理者ページ') !!}
-    <a href="/">公開ページ</a>
+    {!! link_to_route('contents.GetRanking', 'ランキング') !!}
+    <a href="/">食堂の日替わりメニュー</a>
     
 @endsection
