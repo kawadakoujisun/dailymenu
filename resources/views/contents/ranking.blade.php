@@ -18,27 +18,45 @@
         {!! Form::submit('更新', ['class'=>'btn btn-info']) !!}
     {!! Form::close() !!}
     
-    @if(count($dishes) > 0)
+    @if(count($joinedDishes) > 0)
         <ul class="list-unstyled">
             <?php $no = 0; ?>
-            @foreach($dishes as $dish)
+            @foreach($joinedDishes as $joinedDish)
                 <?php ++$no; ?>
                 <li>
                     <div>
-                        {{ $no }}
+                        {{ '第' . $no . '位' }}
                     </div>
                     <div>
-                        {{ $dish->name }}
+                        {{ $joinedDish->name }}
                     </div>
                     <div>
-                        <img src="{{ $dish->image_url }}">
+                        <img src="{{ $joinedDish->image_url }}">
                     </div>
                     <div>
-                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $dish->id], ['class' => 'btn btn-light']) !!}
-                        {{ $dish->requestCount->request_count }}
+                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $joinedDish->id], ['class' => 'btn btn-light']) !!}
+                        {{ $joinedDish->request_counts_request_count }}
                     </div>
                     <div>
-                        {!! nl2br(e($dish->description)) !!}
+                        {!! nl2br(e($joinedDish->description)) !!}
+                    </div>
+                    <div>
+                        {{ 'ここ1年の登場回数' }}
+                        {{ $joinedDish->appearance_count }}
+                    </div>
+                    <div>
+                        {{ '最近登場した日' }}
+                        @if($joinedDish->dates_date != null)
+                            <?php $dateTimestamp = strtotime($joinedDish->dates_date); ?>
+                            <?php $dayOfTheWeekNameArray = [ '日', '月', '火', '水', '木', '金', '土' ]; ?>
+                            {{ date('Y', $dateTimestamp) . '年' . date('n', $dateTimestamp) . '月' . date('j', $dateTimestamp) . '日' . $dayOfTheWeekNameArray[date('w', $dateTimestamp)] . '曜日' }}
+                        @else
+                            {{ '-' . '年' . '-' . '月' . '-' . '日' . '-' . '曜日' }}
+                        @endif
+                    </div>
+                    <div>
+                        <br>
+                        <br>
                     </div>
                 </li>
             @endforeach
@@ -46,7 +64,7 @@
     @endif
     
     {{-- ページネーションのリンク --}}
-    {{ $dishes->links() }}       
+    {{ $joinedDishes->links() }}       
     
     {!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング') !!}
     <a href="/">食堂の日替わりメニュー</a>
