@@ -20,7 +20,7 @@ class CreateDatesTable extends Migration
             $table->timestamps();
             
             // 外部キー制約
-            $table->foreign('dish_id')->references('id')->on('dishes')->onDelete('cascade');;
+            $table->foreign('dish_id')->references('id')->on('dishes')->onDelete('cascade');
         });
     }
 
