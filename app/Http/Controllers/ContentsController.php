@@ -475,6 +475,20 @@ class ContentsController extends Controller
             // .envに
             // ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
             // と書いておく。
+            
+            // herokuのconfigにいろいろ書いて試した結果
+            // ↓null最後、そして他は日付が古いほうが前に来てしまう
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date NULLS LAST"
+            // ↓null最初、そして他は日付が古いほうが前に来てしまう
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date NULLS FIRST"
+            //
+            // ↓null最後、そして他は日付が新しいほうが前に来る←採用。pgsqlで使えるようだ。
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
+            // ↓null最初、そして他は日付が新しいほうが前に来る
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date IS NULL DESC"
+            //
+            // ↓エラーになる
+            //     heroku config:set ORDER_BY_FOR_NULL="'dates.date', 'desc NULLS LAST'"
         }
         
         // Dishの登場回数appearance_countをカウントする期間
