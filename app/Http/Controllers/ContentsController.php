@@ -467,6 +467,16 @@ class ContentsController extends Controller
     
     public function getRankingOfRecentAppearance()
     {
+        $orderByForNull = null;
+        if (env('DB_CONNECTION') == 'mysql') {
+            $orderByForNull = 'dates.date IS NULL ASC';
+        } else {  // (env('DB_CONNECTION') == 'pgsql')
+            $orderByForNull = env('ORDER_BY_FOR_NULL');
+            // .envに
+            // ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
+            // と書いておく。
+        }
+        
         // Dishの登場回数appearance_countをカウントする期間
         $d0 = new \DateTime();
         $d1 = $d0->format('Y-m-d');
@@ -498,6 +508,12 @@ class ContentsController extends Controller
                     ['date', '<=', $endTime]
                 ]);
             }])
+            /*
+            // MySQL
+            ->orderByRaw('dates.date IS NULL ASC')  // MySQLではnullが最後（orderBy('dates.date', 'desc')があっての最後かもしれないので注意）
+            //->orderByRaw('dates.date IS NULL DESC')  // MySQLではnullが最初（orderBy('dates.date', 'desc')があっての最初かもしれないので注意）
+            */
+            ->orderByRaw($orderByForNull)
             ->orderBy('dates.date', 'desc')
             ->orderBy('dishes.created_at', 'desc')
             ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
