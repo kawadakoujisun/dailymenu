@@ -8,6 +8,13 @@ class ManagementBaseController extends Controller
 {
     public function index()
     {
-        return view('management.base.index');
+        if (\Auth::check()) {
+            // ログイン後
+            return view('management.base.index');
+        } else {
+            // ログイン前
+            // 管理者ページログインへリダイレクト
+            return redirect('/management/login');
+        }
     }
 }

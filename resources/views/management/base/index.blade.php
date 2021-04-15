@@ -7,4 +7,10 @@
     {!! link_to_route('management.dates.index', '日替わりメニューを削除') !!}
     <a href="/">公開ページ</a>
 
+    @if (Auth::check())
+        <br>
+        {{-- ログアウトへのリンク --}}
+        {!! link_to_route('logout.get', 'Logout') !!}
+    @endif
+
 @endsection
