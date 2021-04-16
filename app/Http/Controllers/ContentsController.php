@@ -362,6 +362,85 @@ class ContentsController extends Controller
         dd($dishes);
         */
         
+        /*
+        // nullの並び順に関して試したこと
+        // gitに何回もコミットしなくて済むよう、また、herokuに何回もプッシュしなくて済むよう、
+        // 環境変数の値を使うようにして試した
+        
+        $orderByForNull = null;
+        if (env('DB_CONNECTION') == 'mysql') {
+            $orderByForNull = 'dates.date IS NULL ASC';
+        } else {  // (env('DB_CONNECTION') == 'pgsql')
+            $orderByForNull = env('ORDER_BY_FOR_NULL');
+            // .envに
+            // ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
+            // と書いておく。
+            
+            // herokuのconfigにいろいろ書いて試した結果
+            // ↓null最後、そして他は日付が古いほうが前に来てしまう
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date NULLS LAST"
+            // ↓null最初、そして他は日付が古いほうが前に来てしまう
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date NULLS FIRST"
+            //
+            // ↓null最後、そして他は日付が新しいほうが前に来る←採用。pgsqlで使えるようだ。
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
+            // ↓null最初、そして他は日付が新しいほうが前に来る
+            //     heroku config:set ORDER_BY_FOR_NULL="dates.date IS NULL DESC"
+            //
+            // ↓エラーになる
+            //     heroku config:set ORDER_BY_FOR_NULL="'dates.date', 'desc NULLS LAST'"
+        }        
+        
+        // Dishの登場回数appearance_countをカウントする期間
+        $d0 = new \DateTime();
+        $d1 = $d0->format('Y-m-d');
+        $d2 = new \DateTime($d1);
+        $d3 = $d2->sub(new \DateInterval('P30D'));
+        $d4 = $d3->format('Y-m-d');
+        $startTime = $d4;
+        $endTime   = $d1;
+        
+        // Dishの一覧を「RequestCountのrequest_countの降順」で取得
+        // 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
+        $joinedDishes =
+            Dish::leftJoin('dates', 'dishes.id', '=', 'dates.dish_id')
+            ->leftjoin('request_counts', 'dishes.id', '=', 'request_counts.dish_id')
+            ->select(  // このselectに書いたものがDish型のカラムとして存在するようになった
+                'dishes.id',
+                'dishes.name',
+                'dishes.description',
+                'dishes.image_url',
+                'dishes.created_at',
+                'dates.id as dates_id',
+                'dates.date as dates_date',
+                'request_counts.id as request_counts_id',
+                'request_counts.request_count as request_counts_request_count'
+            )
+            ->withCount(['dates as appearance_count' => function(\Illuminate\Database\Eloquent\Builder $query) use($startTime, $endTime) {  // selectの後にwithCountを書くことでDish型のカラムとしてこれが存在するようになった
+                $query->where([
+                    ['date', '>=', $startTime],
+                    ['date', '<=', $endTime]
+                ]);
+            }])
+            // // MySQL
+            // ->orderByRaw('dates.date IS NULL ASC')  // MySQLではnullが最後（orderBy('dates.date', 'desc')があっての最後かもしれないので注意）
+            // //->orderByRaw('dates.date IS NULL DESC')  // MySQLではnullが最初（orderBy('dates.date', 'desc')があっての最初かもしれないので注意）
+            ->orderByRaw($orderByForNull)
+            ->orderBy('dates.date', 'desc')
+            ->orderBy('dishes.created_at', 'desc')
+            ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
+                $sub
+                    ->select('dates.dish_id', \DB::raw('max(dates.date) as dates_max_date'))
+                    ->from('dates')
+                    ->groupBy('dates.dish_id');
+            })
+            ->orWhere('dates.id', '=', null)
+            ->paginate(7);
+        
+        // 一覧ビュー
+        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 2]);        
+        */
+
         //
         // 試行錯誤　ここまで
         //
@@ -401,6 +480,7 @@ class ContentsController extends Controller
                 ]);
             }])
             ->orderBy('request_counts.request_count', 'desc')
+            ->orderByRaw('dates.date IS NULL ASC')
             ->orderBy('dates.date', 'desc')
             ->orderBy('dishes.created_at', 'desc')
             ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
@@ -450,6 +530,7 @@ class ContentsController extends Controller
                 ]);
             }])
             ->orderBy('appearance_count', 'desc')  // 'dishes.appearance_count'と書いたらエラー。Illuminate\Database\QueryException : Column not foundとなる。
+            ->orderByRaw('dates.date IS NULL ASC')
             ->orderBy('dates.date', 'desc')
             ->orderBy('dishes.created_at', 'desc')
             ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
@@ -467,30 +548,6 @@ class ContentsController extends Controller
     
     public function getRankingOfRecentAppearance()
     {
-        $orderByForNull = null;
-        if (env('DB_CONNECTION') == 'mysql') {
-            $orderByForNull = 'dates.date IS NULL ASC';
-        } else {  // (env('DB_CONNECTION') == 'pgsql')
-            $orderByForNull = env('ORDER_BY_FOR_NULL');
-            // .envに
-            // ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
-            // と書いておく。
-            
-            // herokuのconfigにいろいろ書いて試した結果
-            // ↓null最後、そして他は日付が古いほうが前に来てしまう
-            //     heroku config:set ORDER_BY_FOR_NULL="dates.date NULLS LAST"
-            // ↓null最初、そして他は日付が古いほうが前に来てしまう
-            //     heroku config:set ORDER_BY_FOR_NULL="dates.date NULLS FIRST"
-            //
-            // ↓null最後、そして他は日付が新しいほうが前に来る←採用。pgsqlで使えるようだ。
-            //     heroku config:set ORDER_BY_FOR_NULL="dates.date IS NULL ASC"
-            // ↓null最初、そして他は日付が新しいほうが前に来る
-            //     heroku config:set ORDER_BY_FOR_NULL="dates.date IS NULL DESC"
-            //
-            // ↓エラーになる
-            //     heroku config:set ORDER_BY_FOR_NULL="'dates.date', 'desc NULLS LAST'"
-        }
-        
         // Dishの登場回数appearance_countをカウントする期間
         $d0 = new \DateTime();
         $d1 = $d0->format('Y-m-d');
@@ -522,12 +579,7 @@ class ContentsController extends Controller
                     ['date', '<=', $endTime]
                 ]);
             }])
-            /*
-            // MySQL
-            ->orderByRaw('dates.date IS NULL ASC')  // MySQLではnullが最後（orderBy('dates.date', 'desc')があっての最後かもしれないので注意）
-            //->orderByRaw('dates.date IS NULL DESC')  // MySQLではnullが最初（orderBy('dates.date', 'desc')があっての最初かもしれないので注意）
-            */
-            ->orderByRaw($orderByForNull)
+            ->orderByRaw('dates.date IS NULL ASC')  // MySQLでもPostgreSQLでもnullが最後（orderBy('dates.date', 'desc')があっての最後かもしれないので注意）
             ->orderBy('dates.date', 'desc')
             ->orderBy('dishes.created_at', 'desc')
             ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
