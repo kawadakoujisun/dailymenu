@@ -32,7 +32,7 @@
     
     @if(count($joinedDishes) > 0)
         <div class="row">
-            <?php $no = 0; ?>
+            <?php $no = ($joinedDishes->currentPage() - 1) * 7; ?>
             @foreach($joinedDishes as $joinedDish)
                 <?php ++$no; ?>
                 <div class="col-12 mb-4 p-1 border text-center">
