@@ -449,13 +449,16 @@ class ContentsController extends Controller
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         
         // Dishの登場回数appearance_countをカウントする期間
-        $d0 = new \DateTime();
-        $d1 = $d0->format('Y-m-d');
+        $d0 = new \DateTime();       // 今日
+        $d1 = $d0->format('Y-m-d');  // 今日 
         $d2 = new \DateTime($d1);
-        $d3 = $d2->sub(new \DateInterval('P30D'));
-        $d4 = $d3->format('Y-m-d');
+        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
+        $d4 = $d3->format('Y-m-d');                // 1年前
+        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
+        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
+        $d7 = $d6->format('Y-m-d');                // 1年後
         $startTime = $d4;
-        $endTime   = $d1;
+        $endTime   = $d7;
         
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // リクエスト数順(多いほうが前) > 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
@@ -499,13 +502,16 @@ class ContentsController extends Controller
     public function getRankingOfAppearanceCount()
     {
         // Dishの登場回数appearance_countをカウントする期間
-        $d0 = new \DateTime();
-        $d1 = $d0->format('Y-m-d');
+        $d0 = new \DateTime();       // 今日
+        $d1 = $d0->format('Y-m-d');  // 今日 
         $d2 = new \DateTime($d1);
-        $d3 = $d2->sub(new \DateInterval('P30D'));
-        $d4 = $d3->format('Y-m-d');
+        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
+        $d4 = $d3->format('Y-m-d');                // 1年前
+        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
+        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
+        $d7 = $d6->format('Y-m-d');                // 1年後
         $startTime = $d4;
-        $endTime   = $d1;
+        $endTime   = $d7;
         
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // 登場回数順(多いほうが前) > 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
@@ -549,13 +555,16 @@ class ContentsController extends Controller
     public function getRankingOfRecentAppearance()
     {
         // Dishの登場回数appearance_countをカウントする期間
-        $d0 = new \DateTime();
-        $d1 = $d0->format('Y-m-d');
+        $d0 = new \DateTime();       // 今日
+        $d1 = $d0->format('Y-m-d');  // 今日 
         $d2 = new \DateTime($d1);
-        $d3 = $d2->sub(new \DateInterval('P30D'));
-        $d4 = $d3->format('Y-m-d');
+        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
+        $d4 = $d3->format('Y-m-d');                // 1年前
+        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
+        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
+        $d7 = $d6->format('Y-m-d');                // 1年後
         $startTime = $d4;
-        $endTime   = $d1;
+        $endTime   = $d7;
         
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
