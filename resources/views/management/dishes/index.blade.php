@@ -2,40 +2,49 @@
 
 @section('content')
 
+    <div class="text-center">
+        <h1>作ったことのある料理を投稿、編集</h1>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        {{-- ページネーションのリンク --}}
+        {{ $dishes->links() }}
+    </div>
+    
     @if(count($dishes) > 0)
-        <ul class="list-unstyled">
+        <div class="row">
             @foreach($dishes as $dish)
-                <li>
+                <div class="col-12 mb-4 p-1 border text-center">
                     <div>
-                        {{ $dish->name }}
+                        <h2>{{ $dish->name }}</h2>
                     </div>
-                    <div>
+                    <div class="m-3">
                         <img src="{{ $dish->image_url }}">
                     </div>
                     <div>
-                        {!! link_to_route('management.dishes.ResetRequestCount', 'リクエストカウントをリセット', ['id' => $dish->id], ['class' => 'btn btn-light']) !!}
-                        {{ $dish->requestCount->request_count }}
+                        {!! link_to_route('management.dishes.ResetRequestCount', 'リクエストカウントをリセット', ['id' => $dish->id], ['class' => 'btn btn-warning']) !!}
+                        <span class="badge badge-secondary" style="font-size:100%;">{{ $dish->requestCount->request_count }}</span>
+                    </div>                       
+                    <div class="m-2">
+                        <p>{!! nl2br(e($dish->description)) !!}</p>
                     </div>
                     <div>
-                        {!! nl2br(e($dish->description)) !!}
+                        {!! link_to_route('management.dates.CreateSameDish', '日付を指定して投稿', ['dish_id' => $dish->id], ['class' => 'btn btn-primary']) !!}
+                        {!! link_to_route('management.dishes.edit', '編集', ['id' => $dish->id], ['class' => 'btn btn-primary']) !!}
                     </div>
-                    <div>
-                        {!! link_to_route('management.dates.CreateSameDish', '日付を指定して投稿', ['dish_id' => $dish->id], ['class' => 'btn btn-light']) !!}
-                        {!! link_to_route('management.dishes.edit', '編集', ['id' => $dish->id], ['class' => 'btn btn-light']) !!}
-                        
+                    <div class="m-1">
                         {!! Form::open(['route' => ['management.dishes.destroy', $dish->id], 'method' => 'delete']) !!}
                             {!! Form::submit('この料理を削除', ['class' => 'btn btn-danger']) !!}
                         {!! Form::close() !!}
                     </div>
-                </li>
+                </div>
             @endforeach
-        </ul>
+        </div>
     @endif
 
-    {{-- ページネーションのリンク --}}
-    {{ $dishes->links() }}   
-
-    {!! link_to_route('management.base.index', '食堂の日替わりメニュー　管理者ページ') !!}
-    <a href="/">公開ページ</a>
+    <div class="d-flex justify-content-center">
+        {{-- ページネーションのリンク --}}
+        {{ $dishes->links() }}
+    </div>
     
 @endsection

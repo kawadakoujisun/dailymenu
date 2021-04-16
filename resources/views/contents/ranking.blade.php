@@ -10,63 +10,80 @@
     ];
     ?>
     
-    {!! Form::open(['route'=>'contents.PostRanking', 'enctype'=>'multipart/form-data']) !!}
-        <div class='form-group'>
-            {!! Form::label('order', 'ランキング') !!}
-            {!! Form::select('order', $orderArray, old('order', $order_key), ['class'=>'form-control']) !!}
+    <div class="text-center">
+        <h1>ランキング</h1>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            {!! Form::open(['route'=>'contents.PostRanking', 'enctype'=>'multipart/form-data']) !!}
+                <div class='form-group d-flex flex-row'>
+                    {!! Form::select('order', $orderArray, old('order', $order_key), ['class'=>'form-control']) !!}
+                    {!! Form::submit('更新', ['class'=>'btn btn-primary']) !!}
+                </div>
+            {!! Form::close() !!}
         </div>
-        {!! Form::submit('更新', ['class'=>'btn btn-info']) !!}
-    {!! Form::close() !!}
+    </div>
+    
+    <div class="d-flex justify-content-center">
+        {{-- ページネーションのリンク --}}
+        {{ $joinedDishes->links() }}
+    </div>    
     
     @if(count($joinedDishes) > 0)
-        <ul class="list-unstyled">
+        <div class="row">
             <?php $no = 0; ?>
             @foreach($joinedDishes as $joinedDish)
                 <?php ++$no; ?>
-                <li>
+                <div class="col-12 mb-4 p-1 border text-center">
                     <div>
-                        {{ '第' . $no . '位' }}
+                        <h2>{{ '第' . $no . '位' }}</h2>
                     </div>
                     <div>
-                        {{ $joinedDish->name }}
+                        <p style="font-size:200%;">{{ $joinedDish->name }}</p>
                     </div>
-                    <div>
+                    <div class="m-3">
                         <img src="{{ $joinedDish->image_url }}">
                     </div>
                     <div>
-                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $joinedDish->id], ['class' => 'btn btn-light']) !!}
-                        {{ $joinedDish->request_counts_request_count }}
+                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $joinedDish->id], ['class' => 'btn btn-success']) !!}
+                        <span class="badge badge-secondary" style="font-size:100%;">{{ $joinedDish->request_counts_request_count }}</span> 
                     </div>
-                    <div>
-                        {!! nl2br(e($joinedDish->description)) !!}
+                    <div class="m-2">
+                        <p>{!! nl2br(e($joinedDish->description)) !!}</p>
                     </div>
-                    <div>
-                        {{ 'ここ1年の登場回数' }}
-                        {{ $joinedDish->appearance_count }}
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-lg-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>ここ1年の登場回数</td>
+                                    <td>{{ $joinedDish->appearance_count }}</td>
+                                </tr>
+                                <tr>
+                                    <td>最近登場した日</td>
+                                    <td>
+                                        @if($joinedDish->dates_date != null)
+                                            <?php $dateTimestamp = strtotime($joinedDish->dates_date); ?>
+                                            <?php $dayOfTheWeekNameArray = [ '日', '月', '火', '水', '木', '金', '土' ]; ?>
+                                            {{ date('Y', $dateTimestamp) . '年' . date('n', $dateTimestamp) . '月' . date('j', $dateTimestamp) . '日' . '（' . $dayOfTheWeekNameArray[date('w', $dateTimestamp)] . '曜日）' }}
+                                        @else
+                                            {{ ' - ' . '年' . ' - ' . '月' . ' - ' . '日' . '（' . ' - ' . '曜日）' }}
+                                        @endif                                    
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-lg-3"></div>
                     </div>
-                    <div>
-                        {{ '最近登場した日' }}
-                        @if($joinedDish->dates_date != null)
-                            <?php $dateTimestamp = strtotime($joinedDish->dates_date); ?>
-                            <?php $dayOfTheWeekNameArray = [ '日', '月', '火', '水', '木', '金', '土' ]; ?>
-                            {{ date('Y', $dateTimestamp) . '年' . date('n', $dateTimestamp) . '月' . date('j', $dateTimestamp) . '日' . $dayOfTheWeekNameArray[date('w', $dateTimestamp)] . '曜日' }}
-                        @else
-                            {{ '-' . '年' . '-' . '月' . '-' . '日' . '-' . '曜日' }}
-                        @endif
-                    </div>
-                    <div>
-                        <br>
-                        <br>
-                    </div>
-                </li>
+                </div>
             @endforeach
-        </ul>
+        </div>
     @endif
     
-    {{-- ページネーションのリンク --}}
-    {{ $joinedDishes->links() }}       
-    
-    {!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング') !!}
-    <a href="/">食堂の日替わりメニュー</a>
+    <div class="d-flex justify-content-center">
+        {{-- ページネーションのリンク --}}
+        {{ $joinedDishes->links() }}
+    </div>   
     
 @endsection

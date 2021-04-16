@@ -26,6 +26,4 @@
         </div>
     </div>
 
-    <a href="/">公開ページ</a>
-
 @endsection
