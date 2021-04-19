@@ -29,21 +29,27 @@ class RequestCount extends Model
     }
 
     /**
-     * リクエストカウントを増やす
+     * リクエストカウントを増やして、データベースに保存まで行う
      * request_count、total_request_countどちらも1つ増やす。
      */
     public function incrementRequestCount()
     {
-        $requestCountMax = 100000000;  // 上限（この値までOK）
-        
-        if($this->request_count < $requestCountMax)
-        {
-            ++$this->request_count;
-        }
-        
-        if($this->total_request_count < $requestCountMax)
-        {
-            ++$this->total_request_count;
-        }
+        \DB::transaction( function() {
+            $requestCountMax = 100000000;  // 上限（この値までOK）
+    
+            // ロックしたいのでこのidのものを取得し直す
+            $requestCount = RequestCount::where('id', $this->id)->lockForUpdate()->first();
+            
+            // リクエストカウントを増やして、データベースに保存まで行う
+            if($requestCount->request_count < $requestCountMax)
+            {
+                $requestCount->increment('request_count');
+            }
+            
+            if($requestCount->total_request_count < $requestCountMax)
+            {
+                $requestCount->increment('total_request_count');
+            }
+        } );
     }
 }

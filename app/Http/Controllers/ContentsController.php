@@ -516,10 +516,8 @@ class ContentsController extends Controller
         
         // RequestCountを取得
         $requestCount = $dish->requestCount;
-        // リクエストカウントを増やす
+        // リクエストカウントを増やして、データベースに保存まで行う
         $requestCount->incrementRequestCount();
-        // データベースに保存する
-        $requestCount->save();
         
         // 前のURLへリダイレクト
         return back();
