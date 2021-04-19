@@ -459,7 +459,7 @@ class ContentsController extends Controller
                 ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
-        // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
+        // 'order_key'はConfig::get('contents.ContentsDef.rankingOrderArray')のキー
         return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 'REQUEST_COUNT']);
     }
     
@@ -476,7 +476,7 @@ class ContentsController extends Controller
                 ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
-        // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
+        // 'order_key'はConfig::get('contents.ContentsDef.rankingOrderArray')のキー
         return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 'APPEARANCE_COUNT']);        
     }    
     
@@ -492,14 +492,14 @@ class ContentsController extends Controller
                 ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
-        // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
+        // 'order_key'はConfig::get('contents.ContentsDef.rankingOrderArray')のキー
         return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 'RECENT_APPEARANCE']);              
     }
     
     public function postRanking(Request $request)
     {
         // 他のルートへリダイレクト
-        // $request->orderはConfig::get('contents.RankingDef.orderArray')のキー
+        // $request->orderはConfig::get('contents.ContentsDef.rankingOrderArray')のキー
         if ($request->order == 'REQUEST_COUNT') {
             return redirect()->route('contents.GetRankingOfRequestCount');
         } else if ($request->order == 'APPEARANCE_COUNT') {

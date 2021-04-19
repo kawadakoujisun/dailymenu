@@ -10,7 +10,7 @@
         <div class="col-12">
             {!! Form::open(['route'=>'contents.PostRanking', 'enctype'=>'multipart/form-data']) !!}
                 <div class='form-group d-flex flex-row'>
-                    {!! Form::select('order', Config::get('contents.RankingDef.orderArray'), old('order', $order_key), ['class'=>'form-control']) !!}
+                    {!! Form::select('order', Config::get('contents.ContentsDef.rankingOrderArray'), old('order', $order_key), ['class'=>'form-control']) !!}
                     {!! Form::submit('更新', ['class'=>'btn btn-primary']) !!}
                 </div>
             {!! Form::close() !!}

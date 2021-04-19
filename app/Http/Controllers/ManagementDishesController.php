@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+require_once(dirname(__FILE__)."/../../contents/ImageUtil.php");  // 追加
+
 use Illuminate\Http\Request;
 
-use Cloudinary\Cloudinary;  // vendorにあるcloudinaryを追加
-
 use App\Dish;          // 追加
+use App\Contents\ImageUtil;  // 追加
 
 class ManagementDishesController extends Controller
 {
@@ -30,10 +31,11 @@ class ManagementDishesController extends Controller
     public function update(Request $request, $id)
     {
         // バリデーション
+        $validateValueArray = \Config::get('contents.ContentsDef.requestValidateValueArray');
         $request->validate([
-            'name'                => 'required | max:127',
-            'description'         => 'required | max:511',
-            'selected_image_file' => 'mimes:jpeg,jpg,gif,png,bmp | max:2048',  // 画像を変更していないときはnull
+            'name'                => $validateValueArray['name'],
+            'description'         => $validateValueArray['description'],
+            'selected_image_file' => $validateValueArray['selected_image_file'],  // 画像を変更していないときはnull
         ]);
 
         // idの値でDishを検索して取得
@@ -46,33 +48,10 @@ class ManagementDishesController extends Controller
         // 画像を変更しているか
         $selectedImageFile = $request->selected_image_file;
         if(!is_null($selectedImageFile)) {
-            $cloudinary = new Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key'    => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-                'url' => [
-                    'secure' => true
-                ],
-            ]);
-        
-            $uploadApi = $cloudinary->uploadApi();
-            
-            // 古い画像ファイルをCloudinaryから削除する
-            $uploadApi->destroy($dish->image_public_id);
-            
-            // 新しい画像ファイルをCloudinaryにアップする
-            $apiResponse = $uploadApi->upload(
-                $selectedImageFile->getPathname(),
-                [
-                    "resource_type" => "image",
-                    "folder"        => "uploads"
-                ]
-            );
-            
-            $dish->image_url       = $apiResponse["secure_url"];
-            $dish->image_public_id = $apiResponse["public_id"];
+            // 古い画像ファイルを削除し、新しい画像ファイルをアップする
+            list($image_url, $image_public_id) = ImageUtil::uploadImage($selectedImageFile, $dish->image_public_id);
+            $dish->image_url       = $image_url;
+            $dish->image_public_id = $image_public_id;
         }
         
         // データベースに保存する
@@ -87,20 +66,8 @@ class ManagementDishesController extends Controller
         // idの値でDishを検索して取得
         $dish = Dish::findOrFail($id);
         
-        // 画像ファイルをCloudinaryから削除する
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-            'url' => [
-                'secure' => true
-            ],
-        ]);
-        
-        $uploadApi = $cloudinary->uploadApi();
-        $uploadApi->destroy($dish->image_public_id);
+        // 画像ファイルを削除する
+        ImageUtil::destroyImage($dish->image_public_id);
 
         // Dishを削除
         $dish->delete();

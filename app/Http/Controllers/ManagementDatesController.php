@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+require_once(dirname(__FILE__)."/../../contents/ImageUtil.php");  // 追加
 
-use Cloudinary\Cloudinary;  // vendorにあるcloudinaryを追加
+use Illuminate\Http\Request;
 
 use App\Dish;  // 追加
 use App\Date;  // 追加
+use App\Contents\ImageUtil;  // 追加
 
 class ManagementDatesController extends Controller
 {
@@ -28,42 +29,24 @@ class ManagementDatesController extends Controller
     public function storeNewDish(Request $request)
     {
         // バリデーション
+        $validateValueArray = \Config::get('contents.ContentsDef.requestValidateValueArray');
         $request->validate([
-            'date'                => 'required | date | unique:dates',
-            'name'                => 'required | max:127',
-            'description'         => 'required | max:511',
-            'selected_image_file' => 'required | mimes:jpeg,jpg,gif,png,bmp | max:2048',
+            'date'                => $validateValueArray['date'],
+            'name'                => $validateValueArray['name'],
+            'description'         => $validateValueArray['description'],
+            'selected_image_file' => 'required | ' . $validateValueArray['selected_image_file'],
         ]);
         
-        // 画像ファイルをCloudinaryにアップする
+        // 画像ファイルをアップする
         $selectedImageFile = $request->selected_image_file;
-        
-        $cloudinary = new Cloudinary([
-            'cloud' => [
-                'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                'api_key'    => env('CLOUDINARY_API_KEY'),
-                'api_secret' => env('CLOUDINARY_API_SECRET'),
-            ],
-            'url' => [
-                'secure' => true
-            ],
-        ]);
-    
-        $uploadApi = $cloudinary->uploadApi();
-        $apiResponse = $uploadApi->upload(
-            $selectedImageFile->getPathname(),
-            [
-                "resource_type" => "image",
-                "folder"        => "uploads"
-            ]
-        );
+        list($image_url, $image_public_id) = ImageUtil::uploadImage($selectedImageFile, null);
         
         // データベースに保存する
         $dish = Dish::create([
             'name'            => $request->name,
             'description'     => $request->description,
-            'image_url'       => $apiResponse["secure_url"],
-            'image_public_id' => $apiResponse["public_id"],
+            'image_url'       => $image_url,
+            'image_public_id' => $image_public_id,
         ]);
         
         $dish->dates()->create([
@@ -90,8 +73,9 @@ class ManagementDatesController extends Controller
     public function storeSameDish(Request $request, $dish_id)
     {
         // バリデーション
+        $validateValueArray = \Config::get('contents.ContentsDef.requestValidateValueArray');
         $request->validate([
-            'date'                => 'required | date | unique:dates',
+            'date'                => $validateValueArray['date'],
         ]);
         
         // dish_idの値でDishを検索して取得
