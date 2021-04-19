@@ -13,7 +13,8 @@
 
         <div class="container">
             {{-- エラーメッセージ --}}
-            @include('management.commons.error_messages')
+            {{-- management専用のものは用意していない --}}
+            @include('commons.error_messages')
 
             @yield('content')
         </div>

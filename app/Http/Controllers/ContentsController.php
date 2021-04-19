@@ -448,43 +448,15 @@ class ContentsController extends Controller
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         
-        // Dishの登場回数appearance_countをカウントする期間
-        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
-        
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // リクエスト数順(多いほうが前) > 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
         $joinedDishes =
-            Dish::leftJoin('dates', 'dishes.id', '=', 'dates.dish_id')
-            ->leftjoin('request_counts', 'dishes.id', '=', 'request_counts.dish_id')
-            ->select(  // このselectに書いたものがDish型のカラムとして存在するようになった
-                'dishes.id',
-                'dishes.name',
-                'dishes.description',
-                'dishes.image_url',
-                'dishes.created_at',
-                'dates.id as dates_id',
-                'dates.date as dates_date',
-                'request_counts.id as request_counts_id',
-                'request_counts.request_count as request_counts_request_count'
-            )
-            ->withCount(['dates as appearance_count' => function(\Illuminate\Database\Eloquent\Builder $query) use($startTime, $endTime) {  // selectの後にwithCountを書くことでDish型のカラムとしてこれが存在するようになった
-                $query->where([
-                    ['date', '>=', $startTime],
-                    ['date', '<=', $endTime]
-                ]);
-            }])
-            ->orderBy('request_counts.request_count', 'desc')
-            ->orderByRaw('dates.date IS NULL ASC')
-            ->orderBy('dates.date', 'desc')
-            ->orderBy('dishes.created_at', 'desc')
-            ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
-                $sub
-                    ->select('dates.dish_id', \DB::raw('max(dates.date) as dates_max_date'))
-                    ->from('dates')
-                    ->groupBy('dates.dish_id');
-            })
-            ->orWhere('dates.id', '=', null)
-            ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
+            $this->getJoinedDishes()
+                ->orderBy('request_counts.request_count', 'desc')
+                ->orderByRaw('dates.date IS NULL ASC')
+                ->orderBy('dates.date', 'desc')
+                ->orderBy('dishes.created_at', 'desc')        
+                ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
         // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
@@ -493,43 +465,15 @@ class ContentsController extends Controller
     
     public function getRankingOfAppearanceCount()
     {
-        // Dishの登場回数appearance_countをカウントする期間
-        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
-        
-        // Dishの一覧を「RequestCountのrequest_countの降順」で取得
+        // Dishの一覧を「withCountで得たppearance_countの降順」で取得
         // 登場回数順(多いほうが前) > 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
         $joinedDishes =
-            Dish::leftJoin('dates', 'dishes.id', '=', 'dates.dish_id')
-            ->leftjoin('request_counts', 'dishes.id', '=', 'request_counts.dish_id')
-            ->select(  // このselectに書いたものがDish型のカラムとして存在するようになった
-                'dishes.id',
-                'dishes.name',
-                'dishes.description',
-                'dishes.image_url',
-                'dishes.created_at',
-                'dates.id as dates_id',
-                'dates.date as dates_date',
-                'request_counts.id as request_counts_id',
-                'request_counts.request_count as request_counts_request_count'
-            )
-            ->withCount(['dates as appearance_count' => function(\Illuminate\Database\Eloquent\Builder $query) use($startTime, $endTime) {  // selectの後にwithCountを書くことでDish型のカラムとしてこれが存在するようになった
-                $query->where([
-                    ['date', '>=', $startTime],
-                    ['date', '<=', $endTime]
-                ]);
-            }])
-            ->orderBy('appearance_count', 'desc')  // 'dishes.appearance_count'と書いたらエラー。Illuminate\Database\QueryException : Column not foundとなる。
-            ->orderByRaw('dates.date IS NULL ASC')
-            ->orderBy('dates.date', 'desc')
-            ->orderBy('dishes.created_at', 'desc')
-            ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
-                $sub
-                    ->select('dates.dish_id', \DB::raw('max(dates.date) as dates_max_date'))
-                    ->from('dates')
-                    ->groupBy('dates.dish_id');
-            })
-            ->orWhere('dates.id', '=', null)
-            ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
+            $this->getJoinedDishes()
+                ->orderBy('appearance_count', 'desc')  // 'dishes.appearance_count'と書いたらエラー。Illuminate\Database\QueryException : Column not foundとなる。
+                ->orderByRaw('dates.date IS NULL ASC')
+                ->orderBy('dates.date', 'desc')
+                ->orderBy('dishes.created_at', 'desc')
+                ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
         // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
@@ -538,42 +482,14 @@ class ContentsController extends Controller
     
     public function getRankingOfRecentAppearance()
     {
-        // Dishの登場回数appearance_countをカウントする期間
-        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
-        
-        // Dishの一覧を「RequestCountのrequest_countの降順」で取得
+        // Dishの一覧を「Dateのdateの降順」で取得
         // 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
         $joinedDishes =
-            Dish::leftJoin('dates', 'dishes.id', '=', 'dates.dish_id')
-            ->leftjoin('request_counts', 'dishes.id', '=', 'request_counts.dish_id')
-            ->select(  // このselectに書いたものがDish型のカラムとして存在するようになった
-                'dishes.id',
-                'dishes.name',
-                'dishes.description',
-                'dishes.image_url',
-                'dishes.created_at',
-                'dates.id as dates_id',
-                'dates.date as dates_date',
-                'request_counts.id as request_counts_id',
-                'request_counts.request_count as request_counts_request_count'
-            )
-            ->withCount(['dates as appearance_count' => function(\Illuminate\Database\Eloquent\Builder $query) use($startTime, $endTime) {  // selectの後にwithCountを書くことでDish型のカラムとしてこれが存在するようになった
-                $query->where([
-                    ['date', '>=', $startTime],
-                    ['date', '<=', $endTime]
-                ]);
-            }])
-            ->orderByRaw('dates.date IS NULL ASC')  // MySQLでもPostgreSQLでもnullが最後（orderBy('dates.date', 'desc')があっての最後かもしれないので注意）
-            ->orderBy('dates.date', 'desc')
-            ->orderBy('dishes.created_at', 'desc')
-            ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
-                $sub
-                    ->select('dates.dish_id', \DB::raw('max(dates.date) as dates_max_date'))
-                    ->from('dates')
-                    ->groupBy('dates.dish_id');
-            })
-            ->orWhere('dates.id', '=', null)
-            ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
+            $this->getJoinedDishes()
+                ->orderByRaw('dates.date IS NULL ASC')  // MySQLでもPostgreSQLでもnullが最後（orderBy('dates.date', 'desc')があっての最後かもしれないので注意）
+                ->orderBy('dates.date', 'desc')
+                ->orderBy('dishes.created_at', 'desc')
+                ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
         // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
@@ -624,5 +540,38 @@ class ContentsController extends Controller
         $endTime   = $d7;
         
         return [$startTime, $endTime];
+    }
+    
+    private function getJoinedDishes()
+    {
+        // Dishの登場回数appearance_countをカウントする期間
+        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
+        
+        return Dish::leftJoin('dates', 'dishes.id', '=', 'dates.dish_id')
+            ->leftjoin('request_counts', 'dishes.id', '=', 'request_counts.dish_id')
+            ->select(  // このselectに書いたものがDish型のカラムとして存在するようになった
+                'dishes.id',
+                'dishes.name',
+                'dishes.description',
+                'dishes.image_url',
+                'dishes.created_at',
+                'dates.id as dates_id',
+                'dates.date as dates_date',
+                'request_counts.id as request_counts_id',
+                'request_counts.request_count as request_counts_request_count'
+            )
+            ->withCount(['dates as appearance_count' => function(\Illuminate\Database\Eloquent\Builder $query) use($startTime, $endTime) {  // selectの後にwithCountを書くことでDish型のカラムとしてこれが存在するようになった
+                $query->where([
+                    ['date', '>=', $startTime],
+                    ['date', '<=', $endTime]
+                ]);
+            }])
+            ->whereIn(\DB::raw('(dates.dish_id, dates.date)'), function($sub){
+                $sub
+                    ->select('dates.dish_id', \DB::raw('max(dates.date) as dates_max_date'))
+                    ->from('dates')
+                    ->groupBy('dates.dish_id');
+            })
+            ->orWhere('dates.id', '=', null);
     }
 }
