@@ -14,7 +14,7 @@ class ManagementDatesController extends Controller
     public function index()
     {
         // Date一覧をdateの降順で取得
-        $dates = Date::orderBy('date', 'desc')->paginate(7);
+        $dates = Date::orderBy('date', 'desc')->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // Date一覧ビュー
         return view('management.dates.index', ['dates' => $dates]);

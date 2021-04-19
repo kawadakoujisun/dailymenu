@@ -2,14 +2,6 @@
 
 @section('content')
 
-    <?php
-    $orderArray = [
-        0 => 'リクエスト数ランキング',
-        1 => '登場回数ランキング',
-        2 => '最近登場した順',
-    ];
-    ?>
-    
     <div class="text-center">
         <h1>ランキング</h1>
     </div>
@@ -18,7 +10,7 @@
         <div class="col-12">
             {!! Form::open(['route'=>'contents.PostRanking', 'enctype'=>'multipart/form-data']) !!}
                 <div class='form-group d-flex flex-row'>
-                    {!! Form::select('order', $orderArray, old('order', $order_key), ['class'=>'form-control']) !!}
+                    {!! Form::select('order', Config::get('contents.RankingDef.orderArray'), old('order', $order_key), ['class'=>'form-control']) !!}
                     {!! Form::submit('更新', ['class'=>'btn btn-primary']) !!}
                 </div>
             {!! Form::close() !!}
@@ -32,7 +24,7 @@
     
     @if(count($joinedDishes) > 0)
         <div class="row">
-            <?php $no = ($joinedDishes->currentPage() - 1) * 7; ?>
+            <?php $no = ($joinedDishes->currentPage() - 1) * \Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'); ?>
             @foreach($joinedDishes as $joinedDish)
                 <?php ++$no; ?>
                 <div class="col-12 mb-4 p-1 border text-center">

@@ -12,7 +12,7 @@ class ContentsController extends Controller
     public function index()
     {
         // Date一覧をdateの降順で取得
-        $dates = Date::orderBy('date', 'desc')->paginate(7);
+        $dates = Date::orderBy('date', 'desc')->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // Date一覧ビュー
         return view('contents.index', ['dates' => $dates]);
@@ -449,16 +449,7 @@ class ContentsController extends Controller
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         
         // Dishの登場回数appearance_countをカウントする期間
-        $d0 = new \DateTime();       // 今日
-        $d1 = $d0->format('Y-m-d');  // 今日 
-        $d2 = new \DateTime($d1);
-        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
-        $d4 = $d3->format('Y-m-d');                // 1年前
-        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
-        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
-        $d7 = $d6->format('Y-m-d');                // 1年後
-        $startTime = $d4;
-        $endTime   = $d7;
+        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
         
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // リクエスト数順(多いほうが前) > 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
@@ -493,25 +484,17 @@ class ContentsController extends Controller
                     ->groupBy('dates.dish_id');
             })
             ->orWhere('dates.id', '=', null)
-            ->paginate(7);
+            ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
-        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 0]);
+        // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
+        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 'REQUEST_COUNT']);
     }
     
     public function getRankingOfAppearanceCount()
     {
         // Dishの登場回数appearance_countをカウントする期間
-        $d0 = new \DateTime();       // 今日
-        $d1 = $d0->format('Y-m-d');  // 今日 
-        $d2 = new \DateTime($d1);
-        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
-        $d4 = $d3->format('Y-m-d');                // 1年前
-        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
-        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
-        $d7 = $d6->format('Y-m-d');                // 1年後
-        $startTime = $d4;
-        $endTime   = $d7;
+        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
         
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // 登場回数順(多いほうが前) > 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
@@ -546,25 +529,17 @@ class ContentsController extends Controller
                     ->groupBy('dates.dish_id');
             })
             ->orWhere('dates.id', '=', null)
-            ->paginate(7);
+            ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
-        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 1]);        
+        // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
+        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 'APPEARANCE_COUNT']);        
     }    
     
     public function getRankingOfRecentAppearance()
     {
         // Dishの登場回数appearance_countをカウントする期間
-        $d0 = new \DateTime();       // 今日
-        $d1 = $d0->format('Y-m-d');  // 今日 
-        $d2 = new \DateTime($d1);
-        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
-        $d4 = $d3->format('Y-m-d');                // 1年前
-        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
-        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
-        $d7 = $d6->format('Y-m-d');                // 1年後
-        $startTime = $d4;
-        $endTime   = $d7;
+        list($startTime, $endTime) = $this->getAppearanceCountPeriod();
         
         // Dishの一覧を「RequestCountのrequest_countの降順」で取得
         // 登場した順(最近登場したほうが前) > 登録日時順(最近登録したほうが前)        
@@ -598,20 +573,22 @@ class ContentsController extends Controller
                     ->groupBy('dates.dish_id');
             })
             ->orWhere('dates.id', '=', null)
-            ->paginate(7);
+            ->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 一覧ビュー
-        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 2]);              
+        // 'order_key'はConfig::get('contents.RankingDef.orderArray')のキー
+        return view('contents.ranking', ['joinedDishes' => $joinedDishes, 'order_key' => 'RECENT_APPEARANCE']);              
     }
     
     public function postRanking(Request $request)
     {
         // 他のルートへリダイレクト
-        if ($request->order == 0) {
+        // $request->orderはConfig::get('contents.RankingDef.orderArray')のキー
+        if ($request->order == 'REQUEST_COUNT') {
             return redirect()->route('contents.GetRankingOfRequestCount');
-        } else if ($request->order == 1) {
+        } else if ($request->order == 'APPEARANCE_COUNT') {
             return redirect()->route('contents.GetRankingOfAppearanceCount');
-        } else {  // ($request->order == 2)
+        } else {  // ($request->order == 'RECENT_APPEARANCE')
             return redirect()->route('contents.GetRankingOfRecentAppearance');
         }
     }
@@ -630,5 +607,22 @@ class ContentsController extends Controller
         
         // 前のURLへリダイレクト
         return back();
+    }
+    
+    private function getAppearanceCountPeriod()
+    {
+        // Dishの登場回数appearance_countをカウントする期間
+        $d0 = new \DateTime();       // 今日
+        $d1 = $d0->format('Y-m-d');  // 今日 
+        $d2 = new \DateTime($d1);
+        $d3 = $d2->sub(new \DateInterval('P1Y'));  // 1年前
+        $d4 = $d3->format('Y-m-d');                // 1年前
+        $d5 = new \DateTime($d1);  // $d2の値はsubしたときに変わってしまっているので、別のインスタンスを新たに用意する。
+        $d6 = $d5->add(new \DateInterval('P1Y'));  // 1年後（明日の料理を投稿済みのこともあるだろうから）
+        $d7 = $d6->format('Y-m-d');                // 1年後
+        $startTime = $d4;
+        $endTime   = $d7;
+        
+        return [$startTime, $endTime];
     }
 }
