@@ -17,23 +17,14 @@
                 <?php $dish = $date->dish; ?>
                 <div class="col-12 mb-4 p-1 border text-center">
                     <div>
-                        <?php $dateTimestamp = strtotime($date->date); ?>
-                        <?php $dayOfTheWeekNameArray = [ '日', '月', '火', '水', '木', '金', '土' ]; ?>
-                        <h2>{{ date('Y', $dateTimestamp) . '年' . date('n', $dateTimestamp) . '月' . date('j', $dateTimestamp) . '日' . '（' . $dayOfTheWeekNameArray[date('w', $dateTimestamp)] . '曜日）' }}</h2>
+                        {{-- 年月日（曜日）表示 --}}
+                        <?php $beforeDate = '<h2>'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
+                        @include('commons.DateDisplay')
                     </div>
-                    <div>
-                        <p style="font-size:200%;">{{ $dish->name }}</p>
-                    </div>
-                    <div class="m-3">
-                        <img src="{{ $dish->image_url }}">
-                    </div>
-                    <div>
-                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $dish->id], ['class' => 'btn btn-success']) !!}
-                        <span class="badge badge-secondary" style="font-size:100%;">{{ $dish->requestCount->request_count }}</span>
-                    </div>
-                    <div class="m-2">
-                        <p>{!! nl2br(e($dish->description)) !!}</p>
-                    </div>
+                    {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
+                    <?php $dish_id = $dish->id; $dish_name = $dish->name; $dish_description = $dish->description; $dish_image_url = $dish->image_url; ?>
+                    <?php $requestCount_request_count = $dish->requestCount->request_count; ?>
+                    @include('commons.ContentsDisplay')
                 </div>
             @endforeach
         </div>

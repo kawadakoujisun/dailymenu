@@ -15,19 +15,9 @@
         <div class="row">
             @foreach($dishes as $dish)
                 <div class="col-12 mb-4 p-1 border text-center">
-                    <div>
-                        <h2>{{ $dish->name }}</h2>
-                    </div>
-                    <div class="m-3">
-                        <img src="{{ $dish->image_url }}">
-                    </div>
-                    <div>
-                        {!! link_to_route('management.dishes.ResetRequestCount', 'リクエストカウントをリセット', ['id' => $dish->id], ['class' => 'btn btn-warning']) !!}
-                        <span class="badge badge-secondary" style="font-size:100%;">{{ $dish->requestCount->request_count }}</span>
-                    </div>                       
-                    <div class="m-2">
-                        <p>{!! nl2br(e($dish->description)) !!}</p>
-                    </div>
+                    {{-- Dishの値、RequestCountの値、リクエストカウントリセットボタンを表示 --}}
+                    <?php $before_dish_name = '<h2>'; $after_dish_name = '</h2>'; ?>
+                    @include('management.commons.ContentsDisplay')
                     <div>
                         {!! link_to_route('management.dates.CreateSameDish', '日付を指定して投稿', ['dish_id' => $dish->id], ['class' => 'btn btn-primary']) !!}
                         {!! link_to_route('management.dishes.edit', '編集', ['id' => $dish->id], ['class' => 'btn btn-primary']) !!}

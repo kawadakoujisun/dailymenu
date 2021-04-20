@@ -31,19 +31,10 @@
                     <div>
                         <h2>{{ '第' . $no . '位' }}</h2>
                     </div>
-                    <div>
-                        <p style="font-size:200%;">{{ $joinedDish->name }}</p>
-                    </div>
-                    <div class="m-3">
-                        <img src="{{ $joinedDish->image_url }}">
-                    </div>
-                    <div>
-                        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $joinedDish->id], ['class' => 'btn btn-success']) !!}
-                        <span class="badge badge-secondary" style="font-size:100%;">{{ $joinedDish->request_counts_request_count }}</span> 
-                    </div>
-                    <div class="m-2">
-                        <p>{!! nl2br(e($joinedDish->description)) !!}</p>
-                    </div>
+                    {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
+                    <?php $dish_id = $joinedDish->id; $dish_name = $joinedDish->name; $dish_description = $joinedDish->description; $dish_image_url = $joinedDish->image_url; ?>
+                    <?php $requestCount_request_count = $joinedDish->request_counts_request_count; ?>
+                    @include('commons.ContentsDisplay')
                     <div class="row">
                         <div class="col-lg-3"></div>
                         <div class="col-lg-6">
@@ -55,13 +46,9 @@
                                 <tr>
                                     <td>最近登場した日</td>
                                     <td>
-                                        @if($joinedDish->dates_date != null)
-                                            <?php $dateTimestamp = strtotime($joinedDish->dates_date); ?>
-                                            <?php $dayOfTheWeekNameArray = [ '日', '月', '火', '水', '木', '金', '土' ]; ?>
-                                            {{ date('Y', $dateTimestamp) . '年' . date('n', $dateTimestamp) . '月' . date('j', $dateTimestamp) . '日' . '（' . $dayOfTheWeekNameArray[date('w', $dateTimestamp)] . '曜日）' }}
-                                        @else
-                                            {{ ' - ' . '年' . ' - ' . '月' . ' - ' . '日' . '（' . ' - ' . '曜日）' }}
-                                        @endif                                    
+                                        {{-- 年月日（曜日）表示 --}}
+                                        <?php $beforeDate = ''; $dateSrc = $joinedDish->dates_date; $afterDate = '' ?>
+                                        @include('commons.DateDisplay')
                                     </td>
                                 </tr>
                             </table>
