@@ -154,6 +154,9 @@ return [
       |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'date' => '日にち',
+        'selected_image_file' => '写真',
+    ],
 
 ];
