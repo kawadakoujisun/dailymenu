@@ -18,7 +18,7 @@
                             {!! Form::date('date', old('date')) !!}  {{-- 年-月-日(例2021-04-12)だけで時:分:秒はナシ --}}
                         </div>
                         <div>
-                            <p style="font-size:200%;">{{ $dish->name }}</p>
+                            <p style="font-size:200%;">{!! nl2br(e($dish->name)) !!}</p>
                         </div>
                         <div class="m-3">
                             <img src="{{ $dish->image_url }}" style="max-width: 100%; height: auto; width: auto;">

@@ -1,6 +1,6 @@
 {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
 <div>
-    <p style="font-size:200%;">{{ $dish_name }}</p>
+    <p style="font-size:200%;">{!! nl2br(e($dish_name)) !!}</p>
 </div>
 <div class="m-3">
     <img src="{{ $dish_image_url }}" style="max-width: 100%; height: auto; width: auto;">

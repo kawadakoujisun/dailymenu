@@ -19,7 +19,7 @@
                         </div>
                         <div class='form-group'>
                             {!! Form::label('name', '料理名　') !!}
-                            {!! Form::text('name', old('name'), ['class'=>'form-control']) !!}
+                            {!! Form::textarea('name', old('name'), ['class'=>'form-control', 'rows' => '2']) !!}
                         </div>
                         <div class='form-group'>
                             {!! Form::label('selected_image_file', '写真　') !!}

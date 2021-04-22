@@ -15,7 +15,7 @@
                     
                     <div class='form-group'>
                         {!! Form::label('name', '料理名　') !!}
-                        {!! Form::text('name', old('name', $dish->name), ['class'=>'form-control']) !!}
+                        {!! Form::textarea('name', old('name', $dish->name), ['class'=>'form-control', 'rows' => '2']) !!}
                     </div>
                     <div class="m-3 text-center">
                         <img src="{{ $dish->image_url }}" style="max-width: 100%; height: auto; width: auto;">
