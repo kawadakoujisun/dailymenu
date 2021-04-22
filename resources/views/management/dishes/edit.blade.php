@@ -18,7 +18,7 @@
                         {!! Form::text('name', old('name', $dish->name), ['class'=>'form-control']) !!}
                     </div>
                     <div class="m-3 text-center">
-                        <img src="{{ $dish->image_url }}">
+                        <img src="{{ $dish->image_url }}" style="max-width: 100%; height: auto; width: auto;">
                     </div>
                     <div class='form-group'>
                         {!! Form::label('selected_image_file', '写真　') !!}

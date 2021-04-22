@@ -6,7 +6,7 @@
         <h1>ランキング</h1>
     </div>
     
-    <div class="row">
+    <div class="row" style="max-width: 800px; margin: auto;">
         <div class="col-12">
             {!! Form::open(['route'=>'contents.PostRanking', 'enctype'=>'multipart/form-data']) !!}
                 <div class='form-group d-flex flex-row'>
@@ -23,7 +23,7 @@
     </div>    
     
     @if(count($joinedDishes) > 0)
-        <div class="row">
+        <div class="row" style="max-width: 800px; margin: auto;">
             <?php $no = ($joinedDishes->currentPage() - 1) * \Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'); ?>
             @foreach($joinedDishes as $joinedDish)
                 <?php ++$no; ?>

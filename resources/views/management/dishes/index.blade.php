@@ -12,7 +12,7 @@
     </div>
     
     @if(count($dishes) > 0)
-        <div class="row">
+        <div class="row" style="max-width: 800px; margin: auto;">
             @foreach($dishes as $dish)
                 <div class="col-12 mb-4 p-1 border text-center">
                     {{-- Dishの値、RequestCountの値、リクエストカウントリセットボタンを表示 --}}

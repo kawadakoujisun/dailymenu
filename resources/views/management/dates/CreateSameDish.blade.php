@@ -21,10 +21,10 @@
                             <p style="font-size:200%;">{{ $dish->name }}</p>
                         </div>
                         <div class="m-3">
-                            <img src="{{ $dish->image_url }}">
+                            <img src="{{ $dish->image_url }}" style="max-width: 100%; height: auto; width: auto;">
                         </div>
-                        <div class="m-2">
-                            <p>{!! nl2br(e($dish->description)) !!}</p>
+                        <div class="m-2 mx-auto" style="max-width: 600px;">
+                            <p class="text-left">{!! nl2br(e($dish->description)) !!}</p>
                         </div>
                         
                     </div>
