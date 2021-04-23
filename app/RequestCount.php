@@ -50,6 +50,17 @@ class RequestCount extends Model
             {
                 $requestCount->increment('total_request_count');
             }
+            
+            /*
+            // Typeがint(10) unsignedの上限テスト
+            $requestCount->request_count = 4294967295;
+            $requestCount->save();
+            $requestCount->increment('request_count');
+            
+            // エラーになった
+            Illuminate\Database\QueryException
+            SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'request_count' at row 1 (SQL: update `request_counts` set `request_count` = `request_count` + 1, `request_counts`.`updated_at` = 2021-04-23 20:22:33 where `id` = 34)
+            */
         } );
     }
 }
