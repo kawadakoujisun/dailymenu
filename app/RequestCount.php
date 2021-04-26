@@ -40,6 +40,25 @@ class RequestCount extends Model
             // ロックしたいのでこのidのものを取得し直す
             $requestCount = RequestCount::where('id', $this->id)->lockForUpdate()->first();
             
+            /*
+            // ロックのテスト
+            // リクエストカウントが17のときに１つ目のブラウザでリクエストボタンを押す。１つ目のブラウザが固まる。
+            // それから10秒後、test_cookieが設定され、１つ目のブラウザが復活する。
+            // それから45秒後、１つ目のブラウザでリクエストボタンを押す。１つ目のブラウザが固まる。
+            // それから15秒後、test_cookieが消えるので、２つ目のブラウザでリクエストボタンを押す。２つ目のブラウザはスリープしないはずだが固まる。
+            // それから5秒後、１つ目のブラウザが復活する。２つ目のブラウザも復活する。
+            // これで、１つ目のブラウザがロックしていたために２つ目のブラウザが固まっていたことの証明になるかな。
+            $cookie = \Cookie::get('test_cookie');
+            if (is_null($cookie) && $requestCount->request_count == 17) {
+                \Cookie::queue('test_cookie', 'test_cookie_value', 1);  // 1分
+                sleep(10);  // 10秒
+            } else if(!is_null($cookie)) {
+                sleep(20);  // 20秒
+            } else {
+                // sleepしない
+            }
+            */
+            
             // リクエストカウントを増やして、データベースに保存まで行う
             if($requestCount->request_count < $requestCountMax)
             {
