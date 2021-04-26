@@ -34,6 +34,16 @@ class RequestCount extends Model
      */
     public function incrementRequestCount()
     {
+        // リクエスト済みのときは何もしない
+        $requestCountCookieKey = 'request_count_' . $this->id;
+        $requestCountCookie    = \Cookie::get($requestCountCookieKey);
+        if ($this->isRequested()) {
+            return;
+        } else {
+            // \Cookie::queue($this->getRequestedCookieKey(), 'requested', 60*12);  // (60*12)分
+            \Cookie::queue($this->getRequestedCookieKey(), 'requested', 1);  // 1分
+        }
+        
         \DB::transaction( function() {
             $requestCountMax = 100000000;  // 上限（この値までOK）
     
@@ -81,5 +91,24 @@ class RequestCount extends Model
             SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'request_count' at row 1 (SQL: update `request_counts` set `request_count` = `request_count` + 1, `request_counts`.`updated_at` = 2021-04-23 20:22:33 where `id` = 34)
             */
         } );
+    }
+    
+    /**
+     * リクエスト済みかどうか
+     * リクエスト済みのときtrueを返す。
+     */
+    public function isRequested()
+    {
+        $requestedCookie = \Cookie::get($this->getRequestedCookieKey());
+        return (!is_null($requestedCookie));
+    }
+    
+    /**
+     * リクエスト済みかどうかを記録しているCookieのキーを取得する
+     */
+    private function getRequestedCookieKey()
+    {
+        $requestedCookieKey = 'requested_' . $this->id;
+        return $requestedCookieKey;
     }
 }
