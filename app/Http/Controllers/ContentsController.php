@@ -520,7 +520,7 @@ class ContentsController extends Controller
         $requestCount->incrementRequestCount();
         
         // 前のURLへリダイレクト（#を付けてページの途中へ）
-        return redirect($ddTarget . '#' . $jump_id);
+        return redirect(back()->getTargetUrl() . '#' . $jump_id);
     }
     
     private function getAppearanceCountPeriod()
