@@ -35,7 +35,7 @@
                     {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
                     <?php $dish_id = $joinedDish->id; $dish_name = $joinedDish->name; $dish_description = $joinedDish->description; $dish_image_url = $joinedDish->image_url; ?>
                     <?php $requestCount_request_count = $joinedDish->request_counts_request_count; ?>
-                    @include('commons.ContentsDisplay')
+                    @include('commons.ContentsDisplay', ['sharpJumpId' => '#'.$jumpId ])
                     <div class="row">
                         <div class="col-lg-3"></div>
                         <div class="col-lg-6">

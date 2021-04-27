@@ -27,7 +27,7 @@
                     {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
                     <?php $dish_id = $dish->id; $dish_name = $dish->name; $dish_description = $dish->description; $dish_image_url = $dish->image_url; ?>
                     <?php $requestCount_request_count = $dish->requestCount->request_count; ?>
-                    @include('commons.ContentsDisplay')
+                    @include('commons.ContentsDisplay', ['sharpJumpId' => '#'.$jumpId ])
                 </div>
             @endforeach
         </div>

@@ -34,6 +34,18 @@ class RequestCount extends Model
      */
     public function incrementRequestCount()
     {
+        /*
+        // ローカルディスクを使うテスト
+        if (\Storage::disk('local')->exists('file.txt')) {
+            $contents = \Storage::disk('local')->get('file.txt');
+            dd($contents);
+        } else {
+            \Storage::disk('local')->put('file.txt', 'Contents in file.txt');
+            // ↑storage/app内にfile.txtができ、そのファイルには「Contents in file.txt」と書かれていた。
+            //  もう一度呼ぶと、file.txtが作り直される。
+        }
+        */
+        
         // リクエスト済みのときは何もしない
         $requestCountCookieKey = 'request_count_' . $this->id;
         $requestCountCookie    = \Cookie::get($requestCountCookieKey);
