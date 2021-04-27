@@ -27,9 +27,10 @@
             <?php $no = ($joinedDishes->currentPage() - 1) * \Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'); ?>
             @foreach($joinedDishes as $joinedDish)
                 <?php ++$no; ?>
+                <?php $jumpId = 'index'.$no; ?>
                 <div class="col-12 mb-4 p-1 border text-center">
                     <div>
-                        <h2>{{ '第' . $no . '位' }}</h2>
+                        {!! '<h2 id=' . $jumpId . '>' !!}{{ '第' . $no . '位' }}{!! '</h2>' !!}
                     </div>
                     {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
                     <?php $dish_id = $joinedDish->id; $dish_name = $joinedDish->name; $dish_description = $joinedDish->description; $dish_image_url = $joinedDish->image_url; ?>

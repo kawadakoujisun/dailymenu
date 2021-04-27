@@ -13,12 +13,15 @@
 
     @if(count($dates) > 0)
         <div class="row" style="max-width: 800px; margin: auto;">
+            <?php $no = ($dates->currentPage() - 1) * \Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'); ?>
             @foreach($dates as $date)
+                <?php ++$no; ?>
+                <?php $jumpId = 'index'.$no; ?>
                 <?php $dish = $date->dish; ?>
                 <div class="col-12 mb-4 p-1 border text-center">
                     <div>
                         {{-- 年月日（曜日）表示 --}}
-                        <?php $beforeDate = '<h2>'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
+                        <?php $beforeDate = '<h2 id=' . $jumpId . '>'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
                         @include('commons.DateDisplay')
                     </div>
                     {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}

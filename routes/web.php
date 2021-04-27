@@ -22,7 +22,7 @@ Route::get   ('contents/ranking/request-count'             , 'ContentsController
 Route::get   ('contents/ranking/appearance-count'          , 'ContentsController@getRankingOfAppearanceCount' )->name('contents.GetRankingOfAppearanceCount' );
 Route::get   ('contents/ranking/recent-appearance'         , 'ContentsController@getRankingOfRecentAppearance')->name('contents.GetRankingOfRecentAppearance');
 Route::post  ('contents/ranking'                           , 'ContentsController@postRanking'                 )->name('contents.PostRanking'                 );
-Route::get   ('contents/request-dish/{dish_id}'            , 'ContentsController@RequestDish'                 )->name('contents.RequestDish'                 );
+Route::get   ('contents/request-dish/{dish_id}/{jump_id}'  , 'ContentsController@RequestDish'                 )->name('contents.RequestDish'                 );
 
 Route::get   ('management/base'                            , 'ManagementBaseController@index'                 )->name('management.base.index'                );
 

@@ -11,7 +11,7 @@
     @if($requestCount->isRequested())
         <span>リクエスト</span>
     @else
-        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $dish_id], ['class' => 'btn btn-success']) !!}
+        {!! link_to_route('contents.RequestDish', 'リクエスト', ['dish_id' => $dish_id, 'jump_id' => $jumpId], ['class' => 'btn btn-success']) !!}
     @endif
     <span class="badge badge-secondary" style="font-size:100%;">{{ $requestCount_request_count }}</span>
 </div>

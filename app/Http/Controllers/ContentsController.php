@@ -509,7 +509,7 @@ class ContentsController extends Controller
         }
     }
     
-    public function RequestDish($dish_id)
+    public function RequestDish($dish_id, $jump_id)
     {
         // dish_idの値でDishを検索して取得
         $dish = Dish::findOrFail($dish_id);
@@ -519,8 +519,8 @@ class ContentsController extends Controller
         // リクエストカウントを増やして、データベースに保存まで行う
         $requestCount->incrementRequestCount();
         
-        // 前のURLへリダイレクト
-        return back();
+        // 前のURLへリダイレクト（#を付けてページの途中へ）
+        return redirect($ddTarget . '#' . $jump_id);
     }
     
     private function getAppearanceCountPeriod()
