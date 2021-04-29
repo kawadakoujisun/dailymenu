@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+
+:root {
+    --content_max_width: 984px;
+}
+
+
+.restaurant_logo_outer {
+    max-width: var(--content_max_width);
+    margin: auto;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.restaurant_logo_inner {
+    /* 指定することは特にない */
+}
+
+.navbar_outer {
+    max-width: var(--content_max_width);
+    margin: auto;
+}
+
+.restaurant_main_visual_outer {
+    max-width: var(--content_max_width);
+    margin: auto;
+}
+
+.image_in_div {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
+
+/* これより以下、画面サイズに応じて設定を変えているもの */
+.disp_dish_name {
+    font-size: 200%;
+}
+
+@media (max-width: 575px) {
+    .disp_page_title {
+        font-size: 26px;
+    }
+    
+    .disp_item_title {
+        font-size: 22px;
+    }
+    
+    .disp_dish_name {
+        font-size: 22px;
+    }
+}

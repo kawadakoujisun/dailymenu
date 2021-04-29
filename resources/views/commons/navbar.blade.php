@@ -1,4 +1,10 @@
-<header class="mb-4">
+<header class="sticky-top">
+    <div class="restaurant_logo_outer">
+        <div class="restaurant_logo_inner"><a href="/"><img class="image_in_div" src="/images/restaurant_logo.png" alt="食堂"></a></div>
+    </div>
+</header>
+
+<div class="mb-4 navbar_outer">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         {{-- トップページへのリンク --}}
         <a class="navbar-brand" href="/">DailyMenu</a>
@@ -33,4 +39,4 @@
             </ul>
         </div>
     </nav>
-</header>
+</div>
