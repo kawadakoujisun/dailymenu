@@ -18,7 +18,7 @@
                 <div style="position: relative; max-width: 300px; height: auto; margin: auto;">
                     <div style="padding-top: 100%"></div>
                     <div style="position: absolute; top: 0; left 0; width: 100%; height: 100%;">
-                        @include('commons.CalendarDisplay')
+                        @include('commons.CalendarDisplay', ['pageNo' => $dates->currentPage(), 'calendarYearMonth' => $calendarYearMonth])
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
         <div class="col-md-9 order-md-1">
             <div class="d-flex justify-content-center">
                 {{-- ページネーションのリンク --}}
-                {{ $dates->links() }}
+                {{ $dates->appends(['calendar' => $calendarYearMonth])->links() }}
             </div>
         
             @if(count($dates) > 0)
@@ -56,7 +56,7 @@
             
             <div class="d-flex justify-content-center">
                 {{-- ページネーションのリンク --}}
-                {{ $dates->links() }}
+                {{ $dates->appends(['calendar' => $calendarYearMonth])->links() }}
             </div>
         </div>
 

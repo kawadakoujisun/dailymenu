@@ -23,6 +23,8 @@ Route::get   ('contents/ranking/appearance-count'          , 'ContentsController
 Route::get   ('contents/ranking/recent-appearance'         , 'ContentsController@getRankingOfRecentAppearance')->name('contents.GetRankingOfRecentAppearance');
 Route::post  ('contents/ranking'                           , 'ContentsController@postRanking'                 )->name('contents.PostRanking'                 );
 Route::get   ('contents/request-dish/{dish_id}/{jump_id}'  , 'ContentsController@RequestDish'                 )->name('contents.RequestDish'                 );
+Route::get   ('contents/change-calendar/{page_no}/{calendar_value}', 'ContentsController@ChangeCalendar'      )->name('contents.ChangeCalendar'              );
+Route::get   ('contents/select-date/{date_value}/{calendar_value}' , 'ContentsController@SelectDate'          )->name('contents.SelectDate'                  );
 
 Route::get   ('management/base'                            , 'ManagementBaseController@index'                 )->name('management.base.index'                );
 

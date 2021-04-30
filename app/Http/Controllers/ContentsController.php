@@ -14,8 +14,17 @@ class ContentsController extends Controller
         // Date一覧をdateの降順で取得
         $dates = Date::orderBy('date', 'desc')->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
+        // 0個のときを確認するならこうすればいい
+        // $dates = Date::orderBy('date', 'desc')->where('id', '=', 0)->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
+        
+        // カレンダーの年月
+        $calendarYearMonth = request('calendar');
+        if(is_null($calendarYearMonth)) {
+            $calendarYearMonth = date("Y-m");  // 今日の年月を取得する。2021-04
+        }
+        
         // Date一覧ビュー
-        return view('contents.index', ['dates' => $dates]);
+        return view('contents.index', ['dates' => $dates, 'calendarYearMonth' => $calendarYearMonth]);
     }
     
     public function getRankingOfRequestCount()
@@ -521,6 +530,58 @@ class ContentsController extends Controller
         
         // 前のURLへリダイレクト（#を付けてページの途中へ）
         return redirect(back()->getTargetUrl() . '#' . $jump_id);
+    }
+    
+    public function ChangeCalendar($page_no, $calendar_value)
+    {
+        // クエリ文字列を付けてリダイレクト
+        return redirect('/' . '?calendar=' . $calendar_value . '&page=' . $page_no);
+    }
+    
+    public function SelectDate($date_value, $calendar_value)
+    {
+        // $date_valueは2021-04-30
+        // $calendar_valueは2021-04
+        
+        $dateAArray  = explode('-', $date_value);
+        $dateAJoined = $dateAArray[0].$dateAArray[1].$dateAArray[2];  // 20210430
+        
+        $page_no = null;
+        $jump_id = null;
+        
+        // Date一覧をdateの降順で取得
+        $dates = Date::orderBy('date', 'desc')->get();
+        
+        // 日付を探す
+        $findNo = 0;  // 日付を見付けたら0より大
+        $no = 0;
+        foreach($dates as $date) {  // 未来→過去の順に並んでいる
+            ++$no;
+            
+            $dateBArray  = explode(' ', $date->date);  // $date->dateは"2021-04-30 00:00:00"
+            $dateBArray2 = explode('-', $dateBArray[0]);
+            $dateBJoined = $dateBArray2[0].$dateBArray2[1].$dateBArray2[2];  // 20210430
+            
+            if($dateAJoined > $dateBJoined) {
+                break;
+            } else {
+                // $dateAJoinedとより未来か同じ日付なら見付けたことにしておく
+                $findNo = $no;
+            }
+        }
+        
+        // 日付を見付けていたら
+        if($findNo > 0){
+            $page_no = intdiv($findNo - 1, \Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE')) + 1;
+            $jump_id = 'index' . $findNo;
+        }
+        
+        // 日付を見付けていないとき、見付けているときそれぞれに応じたリダイレクト
+        if(is_null($jump_id)) {  // このときは$page_noもnull
+            return redirect('/');
+        } else {
+            return redirect('/' . '?calendar=' . $calendar_value . '&page=' . $page_no . '#' . $jump_id);
+        }
     }
     
     private function getAppearanceCountPeriod()

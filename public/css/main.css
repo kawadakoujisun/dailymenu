@@ -54,6 +54,12 @@
     height:    100%;
 }
 
+/* カレンダーのクリックできるマス */
+.calendar_click_cell {
+    cursor: pointer;
+}
+
+/* カレンダーテキスト */
 .calendar_text {
     /* 左右中央寄せ */
     position:   relative;
