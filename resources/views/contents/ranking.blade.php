@@ -29,8 +29,9 @@
                 <?php ++$no; ?>
                 <?php $jumpId = 'index'.$no; ?>
                 <div class="col-12 mb-4 p-1 border text-center">
+                    @include('commons.SpaceBeforeItemTitle')
                     <div>
-                        {!! '<h2 class="disp_item_title" id=' . $jumpId . '>' !!}{{ '第' . $no . '位' }}{!! '</h2>' !!}
+                        {!! '<h2 class="disp_item_title">' !!}{{ '第' . $no . '位' }}{!! '</h2>' !!}
                     </div>
                     {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
                     <?php $dish_id = $joinedDish->id; $dish_name = $joinedDish->name; $dish_description = $joinedDish->description; $dish_image_url = $joinedDish->image_url; ?>

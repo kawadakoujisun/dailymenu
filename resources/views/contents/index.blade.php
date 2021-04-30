@@ -23,9 +23,10 @@
                 <?php $jumpId = 'index'.$no; ?>
                 <?php $dish = $date->dish; ?>
                 <div class="col-12 mb-4 p-1 border text-center">
+                    @include('commons.SpaceBeforeItemTitle')
                     <div>
                         {{-- 年月日（曜日）表示 --}}
-                        <?php $beforeDate = '<h2 class="disp_item_title" id=' . $jumpId . '>'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
+                        <?php $beforeDate = '<h2 class="disp_item_title">'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
                         @include('commons.DateDisplay')
                     </div>
                     {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}
