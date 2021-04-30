@@ -33,6 +33,32 @@
     height: auto;
 }
 
+/* カレンダー大外枠 */
+.calendar_frame {
+    width:  100%;
+    height: 100%;
+}
+
+/* カレンダー1行 */
+.calendar_row {
+    margin: auto 6.25%;  /* 左右に0.5/8の空白 */
+    width:  87.5%;  /* 7/8 */
+    height: 12.5%;  /* 1/8 */
+}
+
+/* カレンダー1マス */
+.calendar_cell {
+    width:     14.2857%;  /* 1/7 */
+    height:    100%;
+}
+
+.calendar_text {
+    /* 左右中央寄せ */
+    position:   relative;
+    text-align: center;
+    top:        50%;
+    transform:  translateY(-50%);
+}
 
 .space_bfore_item_title {
     width:  0;
