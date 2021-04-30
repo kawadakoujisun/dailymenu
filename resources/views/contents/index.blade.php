@@ -18,7 +18,7 @@
                 <div style="position: relative; max-width: 300px; height: auto; margin: auto;">
                     <div style="padding-top: 100%"></div>
                     <div style="position: absolute; top: 0; left 0; width: 100%; height: 100%;">
-                        @include('commons.CalendarDisplay', ['pageNo' => $dates->currentPage(), 'calendarYearMonth' => $calendarYearMonth])
+                        @include('commons.CalendarDisplay', ['pageNo' => $dates->currentPage(), 'calendarYearMonth' => $calendarYearMonth, 'existDayArray' => $existDayArray])
                     </div>
                 </div>
             </div>

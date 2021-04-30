@@ -1,5 +1,6 @@
 {{-- $pageNoは1始まり --}}
 {{-- $calendarYearMonthは2021-04 --}}
+{{-- $existDayArrayは要素数31+1の配列。日をそのまま配列のインデックスとして使える。 --}}
 
 <?php
 
@@ -66,12 +67,18 @@
                     @endif
                     
                     @if($startDay <= $currDay && $currDay <= $endDay)
-                        <div class="border calendar_cell calendar_click_cell">
-                            <?php $currDateValue = sprintf('%s-%02d', $calendarYearMonth, $currDay);  // 2021-04-30 ?>
-                            <a href="{{ route('contents.SelectDate', ['date_value' => $currDateValue, 'calendar_value' => $calendarYearMonth]) }}">
+                        @if($existDayArray[$currDay])
+                            <div class="border calendar_cell calendar_click_cell">
+                                <?php $currDateValue = sprintf('%s-%02d', $calendarYearMonth, $currDay);  // 2021-04-30 ?>
+                                <a href="{{ route('contents.SelectDate', ['date_value' => $currDateValue, 'calendar_value' => $calendarYearMonth]) }}">
+                                    <div class="calendar_text">{{ $currDay }}</div>
+                                </a>
+                            </div>
+                        @else
+                            <div class="border calendar_cell">
                                 <div class="calendar_text">{{ $currDay }}</div>
-                            </a>
-                        </div>
+                            </div>
+                        @endif
                         <?php ++$currDay; ?>
                     @else
                         <div class="border calendar_cell"></div>

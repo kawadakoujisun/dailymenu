@@ -12,7 +12,10 @@ class ContentsController extends Controller
     public function index()
     {
         // Date一覧をdateの降順で取得
-        $dates = Date::orderBy('date', 'desc')->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
+        // $dates = Date::orderBy('date', 'desc')->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
+        $datesAll = Date::orderBy('date', 'desc');
+        $datesSorted = $datesAll->get();  // getしないと使えないので忘れないように！
+        $dates = $datesAll->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
         
         // 0個のときを確認するならこうすればいい
         // $dates = Date::orderBy('date', 'desc')->where('id', '=', 0)->paginate(\Config::get('contents.ContentsDef.ITEM_NUM_IN_PAGE'));
@@ -23,8 +26,30 @@ class ContentsController extends Controller
             $calendarYearMonth = date("Y-m");  // 今日の年月を取得する。2021-04
         }
         
+        // 比較し易い形式にする
+        $dateAArray = explode('-', $calendarYearMonth);
+        $dateAYearMonth = $dateAArray[0].$dateAArray[1];  // 20210430
+        
+        // 存在する日を探す
+        $existDayArray = array_fill(0, 31 + 1, false);  // 日をそのまま配列のインデックスにするために32個用意する
+        
+        foreach($datesSorted as $date) {  // 未来→過去の順に並んでいる
+            $dateBArray  = explode(' ', $date->date);  // $date->dateは"2021-04-30 00:00:00"
+            $dateBArray2 = explode('-', $dateBArray[0]);
+            $dateBYearMonth = $dateBArray2[0].$dateBArray2[1];  // 202104
+            $dateBDay       = $dateBArray2[2];  // 30
+            
+            if($dateAYearMonth == $dateBYearMonth) {
+                $existDayArray[(int)$dateBDay] = true;  // 日をそのまま配列のインデックスにする
+            } else {
+                if($dateAYearMonth > $dateBYearMonth) {  // これ以降は$dateAYearMonthより過去の年月なので終了する
+                    break;
+                }
+            }
+        }
+        
         // Date一覧ビュー
-        return view('contents.index', ['dates' => $dates, 'calendarYearMonth' => $calendarYearMonth]);
+        return view('contents.index', ['dates' => $dates, 'calendarYearMonth' => $calendarYearMonth, 'existDayArray' => $existDayArray]);
     }
     
     public function getRankingOfRequestCount()
