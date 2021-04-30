@@ -14,10 +14,12 @@
 
         {{-- サイドバー --}}
         <div class="col-md-3 order-md-2 mt-4 mb-4">
-            <div style="position: relative; max-width: 300px; height: auto; margin: auto;">
-                <div style="padding-top: 100%"></div>
-                <div style="position: absolute; top: 0; left 0; width: 100%; height: 100%;">
-                    @include('commons.CalendarDisplay')
+            <div class="sidebar">
+                <div style="position: relative; max-width: 300px; height: auto; margin: auto;">
+                    <div style="padding-top: 100%"></div>
+                    <div style="position: absolute; top: 0; left 0; width: 100%; height: 100%;">
+                        @include('commons.CalendarDisplay')
+                    </div>
                 </div>
             </div>
         </div>

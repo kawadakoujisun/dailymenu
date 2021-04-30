@@ -3,6 +3,8 @@
 
 :root {
     --content_max_width: 984px;
+    --restaurant_logo_height: 120px;
+    --restaurant_logo_height_minus: -120px;
 }
 
 
@@ -62,16 +64,34 @@
 
 .space_bfore_item_title {
     width:  0;
-    height: 120px;
-    margin-top: -120px;
+    height: var(--restaurant_logo_height);
+    margin-top: var(--restaurant_logo_height_minus);
 }
 
+/*
+ * これより以下、画面サイズに応じて設定を変えているもの
+ */
 
-/* これより以下、画面サイズに応じて設定を変えているもの */
+/* 768px以上 col-md- */
+.sidebar {
+    position: sticky;
+    top: var(--restaurant_logo_height);
+}
+
+/* 768px未満 */
+@media (max-width: 767px) {
+    .sidebar {
+        position: static;
+        top: 0;
+    }
+}
+
+/* 576px以上 col-sm- */
 .disp_dish_name {
     font-size: 200%;
 }
 
+/* 576px未満 */
 @media (max-width: 575px) {
     .disp_page_title {
         font-size: 26px;
