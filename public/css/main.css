@@ -3,20 +3,28 @@
 
 :root {
     --content_max_width: 984px;
-    --restaurant_logo_height: 120px;
-    --restaurant_logo_height_minus: -120px;
+    --restaurant_background_color: #be9356;
+    --main_text_color: #827566;
+    --main_text_shadow_color: #696259;
+    --main_frame_color: #a97a45;
+    --restaurant_logo_height: 100px;
+    --restaurant_logo_height_minus: -100px;
 }
 
+
+body {
+    background-color: var(--restaurant_background_color);
+}
 
 .restaurant_logo_outer {
     max-width: var(--content_max_width);
     margin: auto;
     overflow: hidden;
-    background-color: #ffffff;
+    background-color: var(--restaurant_background_color);
 }
 
 .restaurant_logo_inner {
-    /* 指定することは特にない */
+    margin: 8px 8px;
 }
 
 .navbar_outer {
@@ -35,28 +43,158 @@
     height: auto;
 }
 
+.page_frame {
+    max-width: var(--content_max_width);
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 0 auto 12px;
+    padding: 10px;
+}
+
+.page_title {
+    width: 80%;
+    border-bottom: 2px solid var(--main_frame_color);
+    margin: auto;
+    text-align: center;
+    color: var(--main_text_color);
+    text-shadow:
+        1px 1px 4px var(--main_text_shadow_color);
+}
+
+.item_frame {
+    background-color: #fff;
+    border: solid 6px var(--main_frame_color);
+    padding: 0;
+    color: var(--main_text_color);
+}
+
+.item_title {
+    background-color: var(--main_frame_color);
+    margin: 0;
+    padding: 6px;
+    color: #fff;
+}
+
+.space_bfore_item_title {
+    width:  0;
+    height: var(--restaurant_logo_height);
+    margin-top: var(--restaurant_logo_height_minus);
+}
+
+.dish_name {
+    margin: 8px 12px 0;
+    text-shadow:
+        0px 0px 3px var(--main_text_shadow_color);
+}
+
+.dish_image {
+    margin: 0 12px 8px;
+}
+
+.dish_description_outer {
+    margin: 8px 12px 12px;
+}
+
+.dish_description {
+    max-width: 600px;
+    background-color: #e6d4bf;
+    border-radius: 10px;
+    padding: 10px;
+    color: #605951;
+}
+
+.dish_info {
+    margin: 0 12px;
+}
+
+.dish_info_table td {
+    border: 1px solid rgba(169, 122, 69, 0.5);  /* !important付けなくても色が変わった */;
+}
+
+.sidebar_box {
+    box-shadow:
+        1px 1px 4px var(--main_text_shadow_color);
+    padding: 0 4px 4px 0;
+}
+
+
 /* カレンダー大外枠 */
 .calendar_frame {
     width:  100%;
     height: 100%;
+    margin: auto;
 }
 
 /* カレンダー1行 */
+/*
 .calendar_row {
-    margin: auto 6.25%;  /* 左右に0.5/8の空白 */
-    width:  87.5%;  /* 7/8 */
+    margin: auto 6.25%;  /* 左右に0.5/8の空白 *
+    width:  87.5%;  /* 7/8 *
+    height: 12.5%;  /* 1/8 *
+    background-color: rgba(255, 255, 255, 1.0);
+}
+*/
+/* ↑
+   外部に正方形の枠を用意しその中にカレンダーを読み込めば、カレンダーの各セルが正方形になる。
+   ただし、カレンダーは縦長なので左右に余白ができる。 */
+/* 外部の枠にピッタリ合わせてカレンダーを表示する。左右に余白もできない。
+   カレンダーの各セルを正方形にしたければ、外部の枠を横:縦=7:8で用意しておかなければならない。
+   ↓ */
+.calendar_row {
+    width:  100%;  /* 7/7 */
     height: 12.5%;  /* 1/8 */
+    background-color: rgba(255, 255, 255, 1.0);
+}
+
+/* カレンダーの月のマス（横5マス分） */
+.calendar_cell_month {
+    width:     71.42857%;  /* 5/7 */
+    height:    100%;
+    border:    1px solid rgba(169, 122, 69, 0.5);
 }
 
 /* カレンダー1マス */
 .calendar_cell {
     width:     14.2857%;  /* 1/7 */
     height:    100%;
+    border:    1px solid rgba(169, 122, 69, 0.5);
 }
 
 /* カレンダーのクリックできるマス */
 .calendar_click_cell {
+    background-color: rgba(242, 215, 37, 1.0);
     cursor: pointer;
+}
+
+/* カレンダーのクリックできるマス（月変更矢印用） */
+.calendar_click_cell_arrow {
+    background-color: rgba(206, 242, 37, 1.0);
+    cursor: pointer;
+}
+
+/* カレンダーの定休日のマス */
+.calendar_close_cell {
+    background-color: rgba(248, 39, 88, 0.5);
+}
+
+/* カレンダーの定休日のマスにバツ印を付ける */
+.calendar_close_cell .calendar_text:before,
+.calendar_close_cell .calendar_text:after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  content: "";
+  display: block;
+  width: 100%;
+  border-top: 1px solid rgba(231, 34, 80, 1.0);
+}
+ 
+.calendar_close_cell .calendar_text:before {
+  transform: skewY(-45deg);
+}
+ 
+.calendar_close_cell .calendar_text:after {
+  transform: skewY(45deg);
 }
 
 /* カレンダーテキスト */
@@ -68,11 +206,21 @@
     transform:  translateY(-50%);
 }
 
-.space_bfore_item_title {
-    width:  0;
-    height: var(--restaurant_logo_height);
-    margin-top: var(--restaurant_logo_height_minus);
+/* カレンダーテキストの色 */
+.calendar_text_color_weekday {
+    color: #827566;
 }
+
+/* カレンダーテキストの色（土曜日） */
+.calendar_text_color_saturday {
+    color: #3d7df3;
+}
+
+/* カレンダーテキストの色（休日） */
+.calendar_text_color_holiday {
+    color: rgba(248, 39, 88, 1.0);
+}
+
 
 /*
  * これより以下、画面サイズに応じて設定を変えているもの
@@ -93,21 +241,21 @@
 }
 
 /* 576px以上 col-sm- */
-.disp_dish_name {
+.font_size_dish_name {
     font-size: 200%;
 }
 
 /* 576px未満 */
 @media (max-width: 575px) {
-    .disp_page_title {
+    .font_size_page_title {
         font-size: 26px;
     }
     
-    .disp_item_title {
+    .font_size_item_title {
         font-size: 22px;
     }
     
-    .disp_dish_name {
+    .font_size_dish_name {
         font-size: 22px;
     }
 }

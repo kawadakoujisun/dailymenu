@@ -4,22 +4,24 @@
     </div>
 </header>
 
-<div class="mb-4 navbar_outer">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        {{-- トップページへのリンク --}}
-        <a class="navbar-brand" href="/">DailyMenu</a>
-
+<div class="mb-3 navbar_outer">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#nav-bar">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="nav-bar">
-            <ul class="navbar-nav mr-auto"></ul>
             <ul class="navbar-nav">
                 @if (Auth::check())
                     {{-- 管理者としてログインしているとき --}}
+                    {{-- ダミー --}}
+                    <li class="nav-item"><span class='nav-link'>ホーム</span></li>
+                    {{-- トップページへのリンク --}}
+                    <li class="nav-item">{!! link_to_route('contents.index', '日替わりメニュー', [], ['class' => 'nav-link']) !!}</li>
                     {{-- ランキングページへのリンク --}}
                     <li class="nav-item">{!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング', [], ['class' => 'nav-link']) !!}</li>
+                    {{-- ダミー --}}
+                    <li class="nav-item"><span class='nav-link'>アクセス</span></li>
                     {{-- 管理者向け --}}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">管理者専用</a>
@@ -33,8 +35,14 @@
                     </li>
                 @else
                     {{-- 一般ユーザ向け --}}
+                    {{-- ダミー --}}
+                    <li class="nav-item"><span class='nav-link'>ホーム</span></li>
+                    {{-- トップページへのリンク --}}
+                    <li class="nav-item">{!! link_to_route('contents.index', '日替わりメニュー', [], ['class' => 'nav-link']) !!}</li>
                     {{-- ランキングページへのリンク --}}
                     <li class="nav-item">{!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング', [], ['class' => 'nav-link']) !!}</li>
+                    {{-- ダミー --}}
+                    <li class="nav-item"><span class='nav-link'>アクセス</span></li>
                 @endif
             </ul>
         </div>
