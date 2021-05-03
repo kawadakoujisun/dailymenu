@@ -15,13 +15,13 @@
                 @if (Auth::check())
                     {{-- 管理者としてログインしているとき --}}
                     {{-- ダミー --}}
-                    <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">ホーム</span></li>
+                    {{-- <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">ホーム</span></li> --}}
                     {{-- トップページへのリンク --}}
                     <li class="nav-item">{!! link_to_route('contents.index', '日替わりメニュー', [], ['class' => 'nav-link']) !!}</li>
                     {{-- ランキングページへのリンク --}}
                     <li class="nav-item">{!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング', [], ['class' => 'nav-link']) !!}</li>
                     {{-- ダミー --}}
-                    <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">アクセス</span></li>
+                    {{-- <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">アクセス</span></li> --}}
                     {{-- 管理者向け --}}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">管理者専用</a>
@@ -36,13 +36,13 @@
                 @else
                     {{-- 一般ユーザ向け --}}
                     {{-- ダミー --}}
-                    <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">ホーム</span></li>
+                    {{-- <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">ホーム</span></li> --}}
                     {{-- トップページへのリンク --}}
                     <li class="nav-item">{!! link_to_route('contents.index', '日替わりメニュー', [], ['class' => 'nav-link']) !!}</li>
                     {{-- ランキングページへのリンク --}}
                     <li class="nav-item">{!! link_to_route('contents.GetRankingOfRequestCount', 'ランキング', [], ['class' => 'nav-link']) !!}</li>
                     {{-- ダミー --}}
-                    <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">アクセス</span></li>
+                    {{-- <li class="nav-item"><span class='nav-link' style="text-decoration: line-through;">アクセス</span></li> --}}
                 @endif
             </ul>
         </div>

@@ -12,7 +12,13 @@
             {!! Form::open(['route'=>'management.base.ExecuteResizeImage', 'enctype'=>'multipart/form-data']) !!}
                 <div class="row">
                     <div class="col-12 mb-4 p-1 border">
-
+                        <div class='text-left'>
+                            <ul>
+                                <li>{{ '写真ファイルをサーバーでリサイズするので、アップロードしてダウンロードします。' }}</li>
+                                <li>{{ 'もともとの写真ファイルのベース名の末尾に "_resized" を付けた名前でダウンロードしてきます。' }}</li>
+                            </ul>
+                        </div>
+                        
                         <div class='form-group'>
                             {!! Form::label('selected_image_file', '写真　') !!}
                             {!! Form::file('selected_image_file') !!}
@@ -31,10 +37,7 @@
                                 <div class='col-form-label col-5 text-left'>（0を指定すると横と比率を合わせてリサイズする）</div>
                         </div>
                         <div class='text-left'>
-                            <ul>
-                                <li>{{ '縦横どちらも0のときはサイズは変更せずjpgファイルとして保存します。' }}</li>
-                                <li>{{ 'もともとの写真ファイルのベース名の末尾に "_resized" を付けた名前で保存します。' }}</li>
-                            </ul>
+                            {{ '縦横どちらも0のときはサイズを変更せずjpgファイルに変換します。' }}
                         </div>
                     </div>
                 </div>
