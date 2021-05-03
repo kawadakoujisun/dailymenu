@@ -41,6 +41,9 @@ return [
         'description'         => '説明',
         'selected_image_file' => '写真',
         
+        'resize_image_width'  => '横',
+        'resize_image_height' => '縦',
+        
         'email'    => 'メールアドレス',
         'password' => 'パスワード'
     ],

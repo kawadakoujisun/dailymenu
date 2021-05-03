@@ -12,6 +12,7 @@
                 <li>{!! link_to_route('management.dates.CreateNewDish', '新しい料理を投稿') !!}</li>
                 <li>{!! link_to_route('management.dishes.index', '作ったことのある料理を投稿、編集') !!}</li>
                 <li>{!! link_to_route('management.dates.index', '日替わりメニューを削除') !!}</li>
+                <li>{!! link_to_route('management.base.ResizeImage', '画像ファイルをリサイズ') !!}</li>
             </ul>
         </div>
     </div>
