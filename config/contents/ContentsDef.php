@@ -17,4 +17,6 @@ return [
         'description'         => 'required | max:511',
         'selected_image_file' => 'mimes:jpeg,jpg,gif,png,bmp | max:2048',  // requiredが必要なときは足して  // 'IMAGE_FILE_SIZE_MAX'と'requestValidateValueArray'に2048という記述あり。
     ],
+    
+    'STORAGE_TMP_UPLOADS_DIR' => 'public/tmp_uploads',  // 画像ファイルのリサイズを行う際の一時的なファイル置き場。storage/app以下のパス。
 ];

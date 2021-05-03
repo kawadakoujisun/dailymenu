@@ -48,6 +48,16 @@
             {!! Form::close() !!}
     
         </div>
+
+        <div class="col-12 mt-5 mb-4 border-bottom">
+            {{-- 空白行を作りたかったので追加したdiv --}}
+        </div>
+
+        <div class="col-12">
+            <div class="text-center">
+                {!! link_to_route('management.base.ClearTmpResizeImage', 'サーバーに残っている不要なファイルを削除する', null, ['class' => 'btn btn-warning']) !!}
+            </div>
+        </div>
     </div>
     
 @endsection

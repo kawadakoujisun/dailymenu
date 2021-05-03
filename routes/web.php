@@ -49,5 +49,6 @@ Route::group(['middleware' => ['auth']], function () {
     
     Route::get   ('management/base/resize-image'               , 'ManagementBaseController@resizeImage'           )->name('management.base.ResizeImage'          );
     Route::post  ('management/base/execute-resize-image'       , 'ManagementBaseController@executeResizeImage'    )->name('management.base.ExecuteResizeImage'   );
+    Route::get   ('management/base/clear-tmp-resize-image'     , 'ManagementBaseController@clearTmpResizeImage'   )->name('management.base.ClearTmpResizeImage'  );
 
 });

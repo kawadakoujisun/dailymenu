@@ -28,7 +28,7 @@ class ManagementBaseController extends Controller
         // バリデーション
         $validateValueArray = \Config::get('contents.ContentsDef.requestValidateValueArray');
         $request->validate([
-            'selected_image_file' => 'required | mimes:jpeg,jpg,gif,png,bmp | max:16384',
+            'selected_image_file' => 'required | mimes:jpeg,jpg,gif,png,bmp,webp | max:16384',
             'resize_image_width'  => 'required',
             'resize_image_height' => 'required',
         ]);
@@ -42,7 +42,7 @@ class ManagementBaseController extends Controller
         $saveFileName = $originalInfo['filename'] . '_resized.' . 'jpg';  // jpg固定
         
         // storageに一時フォルダを作成する。手動でも削除し易いように、専用の一時フォルダを削除しておく。
-        $tmpDirPath = 'public/tmp_uploads';
+        $tmpDirPath = $tmpDirPath = \Config::get('contents.ContentsDef.STORAGE_TMP_UPLOADS_DIR');
         if(!(\Storage::exists($tmpDirPath))) {
             \Storage::makeDirectory($tmpDirPath);
         }
@@ -127,5 +127,17 @@ class ManagementBaseController extends Controller
             // 失敗したときは前のURLへリダイレクト
             return back();
         }
+    }
+    
+    public function clearTmpResizeImage()
+    {
+        // storageの一時フォルダを削除する。
+        $tmpDirPath = \Config::get('contents.ContentsDef.STORAGE_TMP_UPLOADS_DIR');
+        if(\Storage::exists($tmpDirPath)) {
+            \Storage::deleteDirectory($tmpDirPath);  // ディレクトリと中に含まれている全ファイルを削除する
+        }
+        
+        // 前のURLへリダイレクト
+        return back();
     }
 }
