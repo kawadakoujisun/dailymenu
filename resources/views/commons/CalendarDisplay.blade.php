@@ -4,6 +4,83 @@
 
 <?php
 
+    /**
+     * 定休日を取得する
+     */
+    function getCloseDayArray($year, $month)
+    {
+        // 定休日
+        $closeDayArray = array_fill(0, 31 + 1, false);  // 日をそのまま配列のインデックスにするために32個用意する
+        
+        // 定休日をcsvファイルから読み込む
+        $uploadsDir = public_path('/uploads/');  // $uploadsDirは「.../トップフォルダ/public/uploads/」となる
+        $closeDaysFile = new SplFileObject($uploadsDir . "restaurant_close_days.csv"); 
+        // csvファイルはUTF-8で
+        // csvファイルの中身の例
+        // 2021-04-06
+        // 2021-04-12
+        $closeDaysFile->setFlags(SplFileObject::READ_CSV); 	
+        
+        foreach ($closeDaysFile as $line) {
+            if(isset($line[0])) {
+                $ymd = explode("-", $line[0]);  // 年と月と日に分ける
+                $m = abs($ymd[1]);
+                if($ymd[0] == $year && $m == $month) {
+                    $d = abs($ymd[2]);
+                    if(1 <= $d && $d <= 31) {
+                        $closeDayArray[$d] = true;
+                    }
+                }
+            }
+        }
+        
+        return $closeDayArray;
+    }
+    
+    /**
+     * 国民の祝日を取得する
+     *
+     * csvファイルは内閣府からダウンロードしたもの
+     * https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
+     * これをUTF-8に変換したものをあらかじめアップロードしておく
+     * csvファイルの中身の例
+     * 国民の祝日・休日月日,国民の祝日・休日名称
+     * 1955/1/1,元日
+     * 1955/1/15,成人の日
+     */
+    function getHolidayArray($year, $month)
+    {
+        // 休日
+        $holidayArray = array_fill(0, 31 + 1, false);  // 日をそのまま配列のインデックスにするために32個用意する
+        
+        // 定休日をcsvファイルから読み込む
+        $uploadsDir = public_path('/uploads/');  // $uploadsDirは「.../トップフォルダ/public/uploads/」となる
+        $holidayFile = new SplFileObject($uploadsDir . "syukujitsu_utf8.csv"); 
+        $holidayFile->setFlags(SplFileObject::READ_CSV); 	
+        
+        $lineNo = 0;
+        foreach ($holidayFile as $line) {
+            if($lineNo > 0) {
+                if(isset($line[0])) {
+                    $ymd = explode("/", $line[0]);  // 年と月と日に分ける
+                    $m = abs($ymd[1]);
+                    if($ymd[0] == $year && $m == $month) {
+                        $d = abs($ymd[2]);
+                        if(1 <= $d && $d <= 31) {
+                            $holidayArray[$d] = true;
+                        }
+                    }
+                }
+            }
+            ++$lineNo;
+        }
+        
+        return $holidayArray;
+    }
+
+?>
+
+<?php
     $weekNumMax = 1 + 6;  // 曜日を表示する行の分を足しておく
     $dayOfTheWeekNameArray = [ '日', '月', '火', '水', '木', '金', '土' ];
 
@@ -35,15 +112,10 @@
     }
     
     // 定休日
-    $closeDayArray = array_fill(0, 31 + 1, false);  // 日をそのまま配列のインデックスにするために32個用意する
-    $dayInWeek = $startDayInWeek;
-    for($currDay=$startDay; $currDay<=$endDay; ++$currDay) {
-        if($dayInWeek == 2){  // 火曜日を定休日とする
-            $closeDayArray[$currDay] = true;
-        }
-        $dayInWeek = ($dayInWeek + 1) % 7;
-    }
-    
+    $closeDayArray = getCloseDayArray($year, $month);
+    // 国民の祝日
+    $holidayArray = getHolidayArray($year, $month);
+
     // 日付を表示するのに使う変数
     $currDay = 0;
     
@@ -70,25 +142,44 @@
         <div class="d-flex flex-row justify-content-between calendar_row">
             @for($dayInWeek=0; $dayInWeek<7; ++$dayInWeek)
                 <?php
-                    $calendarTextColorClass = "calendar_text_color_weekday";
-                    if($dayInWeek == 0) {
-                        $calendarTextColorClass = "calendar_text_color_holiday";
-                    } else if($dayInWeek == 6) {
-                        $calendarTextColorClass = "calendar_text_color_saturday";
+                    // マスが1日に来たかどうか確認する
+                    if($weekIndex > 0) {
+                        if($currDay == 0) {
+                            if($dayInWeek == $startDayInWeek) {
+                                ++$currDay;
+                            }
+                        }
                     }
-                    // currDayが1以上なら日付が入っているので、日曜日以外の休日を調べるのに使える。
+                    
+                    // 日付の色を決める
+                    $calendarTextColorClass = null;
+
+                    // 国民の祝日
+                    if(1 <= $currDay && $currDay <= 31) {
+                        // $currDayが1以上なら日付が入っているので、日曜日以外の休日を調べるのに使える。
+                        if($holidayArray[$currDay]) {
+                            $calendarTextColorClass = "calendar_text_color_holiday";
+                        }
+                    }
+                    
+                    if(is_null($calendarTextColorClass)) {
+                        if($dayInWeek == 0) {
+                            // 日曜日
+                            $calendarTextColorClass = "calendar_text_color_holiday";
+                        } else if($dayInWeek == 6) {
+                            // 土曜日
+                            $calendarTextColorClass = "calendar_text_color_saturday";
+                        } else {
+                            // 平日
+                            $calendarTextColorClass = "calendar_text_color_weekday";
+                        }
+                    }
                 ?>
                 @if($weekIndex == 0)
                     <div class="calendar_cell">
                         {!! '<div class="calendar_text ' . $calendarTextColorClass . '">' !!} {{ $dayOfTheWeekNameArray[$dayInWeek] }} {!! '</div>' !!}
                     </div>
                 @else
-                    @if($currDay == 0)
-                        @if($dayInWeek == $startDayInWeek)
-                            <?php ++$currDay; ?>
-                        @endif
-                    @endif
-                    
                     @if($startDay <= $currDay && $currDay <= $endDay)
                         @if($existDayArray[$currDay])
                             <div class="calendar_cell calendar_click_cell">
