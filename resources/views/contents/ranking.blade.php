@@ -52,11 +52,11 @@
                                         <div class="col-lg-6">
                                             <table class="table table-bordered dish_info_table">
                                                 <tr>
-                                                    <td class="align-middle">ここ1年の<br>登場回数</td>
+                                                    <td class="align-middle"><span class="word_lump">ここ1年の</span><span class="word_lump">登場回数</span></td>
                                                     <td class="align-middle">{{ $joinedDish->appearance_count }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="align-middle">最近登場した日</td>
+                                                    <td class="align-middle"><span class="word_lump">最近</span><span class="word_lump">登場した日</span></td>
                                                     <td class="align-middle">
                                                         {{-- 年月日（曜日）表示 --}}
                                                         <?php $beforeDate = ''; $dateSrc = $joinedDish->dates_date; $afterDate = '' ?>

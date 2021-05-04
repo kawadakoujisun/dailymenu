@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="text-center">
-        <h1>日替わりメニューを削除</h1>
+        <h1 class="font_size_page_title">日替わりメニューを削除</h1>
     </div>
 
     <div class="d-flex justify-content-center">
@@ -18,11 +18,11 @@
                 <div class="col-12 mb-4 p-1 border text-center">
                     <div>
                         {{-- 年月日（曜日）表示 --}}
-                        <?php $beforeDate = '<h2>'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
+                        <?php $beforeDate = '<h2 class="font_size_item_title">'; $dateSrc = $date->date; $afterDate = '</h2>' ?>
                         @include('commons.DateDisplay')
                     </div>
                     {{-- Dishの値、RequestCountの値、リクエストカウントリセットボタンを表示 --}}
-                    <?php $before_dish_name = '<p style="font-size:200%;">'; $after_dish_name = '</p>'; ?>
+                    <?php $before_dish_name = '<p class="font_size_dish_name">'; $after_dish_name = '</p>'; ?>
                     @include('management.commons.ContentsDisplay')
                     <div>
                         {!! Form::open(['route' => ['management.dates.destroy', $date->id], 'method' => 'delete']) !!}

@@ -63,6 +63,6 @@
 </div>
 <div class="dish_description_outer">
     <div class="dish_description mx-auto">
-        <p class="text-left">{!! nl2br(e($dish_description)) !!}</p>
+        <p class="text-left mb-0">{!! nl2br(e($dish_description)) !!}</p>
     </div>
 </div>

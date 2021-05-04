@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="text-center">
-        <h1>作ったことのある料理を投稿、編集</h1>
+        <h1 class="font_size_page_title"><span class="word_lump">作ったことのある料理を</span><span class="word_lump">投稿、編集</span></h1>
     </div>
 
     <div class="d-flex justify-content-center">
@@ -16,7 +16,7 @@
             @foreach($dishes as $dish)
                 <div class="col-12 mb-4 p-1 border text-center">
                     {{-- Dishの値、RequestCountの値、リクエストカウントリセットボタンを表示 --}}
-                    <?php $before_dish_name = '<h2>'; $after_dish_name = '</h2>'; ?>
+                    <?php $before_dish_name = '<h2 class="font_size_item_title">'; $after_dish_name = '</h2>'; ?>
                     @include('management.commons.ContentsDisplay')
                     <div>
                         {!! link_to_route('management.dates.CreateSameDish', '日付を指定して投稿', ['dish_id' => $dish->id], ['class' => 'btn btn-primary']) !!}

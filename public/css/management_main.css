@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+
+/* spanに付与して改行位置を制御する */
+.word_lump {
+    display: inline-block;
+}
+
+
+/*
+ * これより以下、画面サイズに応じて設定を変えているもの
+ */
+
+/* 576px以上 col-sm- */
+.font_size_dish_name {
+    font-size: 200%;
+}
+
+/* 576px未満 */
+@media (max-width: 575px) {
+    .font_size_page_title {
+        font-size: 26px;
+    }
+    
+    .font_size_item_title {
+        font-size: 22px;
+    }
+    
+    .font_size_dish_name {
+        font-size: 22px;
+    }
+}

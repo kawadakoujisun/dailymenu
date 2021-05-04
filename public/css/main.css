@@ -111,6 +111,11 @@ body {
     border: 1px solid rgba(169, 122, 69, 0.5);  /* !important付けなくても色が変わった */;
 }
 
+/* spanに付与して改行位置を制御する */
+.word_lump {
+    display: inline-block;
+}
+
 .sidebar_box {
     box-shadow:
         1px 1px 4px var(--main_text_shadow_color);
