@@ -47,8 +47,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post  ('management/dates/store-same-dish/{dish_id}' , 'ManagementDatesController@storeSameDish'        )->name('management.dates.StoreSameDish'       );
     Route::delete('management/dates/{id}'                      , 'ManagementDatesController@destroy'              )->name('management.dates.destroy'             );
     
-    Route::get   ('management/base/resize-image'               , 'ManagementBaseController@resizeImage'           )->name('management.base.ResizeImage'          );
-    Route::post  ('management/base/execute-resize-image'       , 'ManagementBaseController@executeResizeImage'    )->name('management.base.ExecuteResizeImage'   );
-    Route::get   ('management/base/clear-tmp-resize-image'     , 'ManagementBaseController@clearTmpResizeImage'   )->name('management.base.ClearTmpResizeImage'  );
+    Route::get   ('management/resize/resize-image'             , 'ManagementBaseController@resizeImage'           )->name('management.base.ResizeImage'          );
+    Route::post  ('management/resize/execute-resize-image'     , 'ManagementBaseController@executeResizeImage'    )->name('management.base.ExecuteResizeImage'   );
+    Route::get   ('management/resize/clear-tmp-resize-image'   , 'ManagementBaseController@clearTmpResizeImage'   )->name('management.base.ClearTmpResizeImage'  );
 
 });
