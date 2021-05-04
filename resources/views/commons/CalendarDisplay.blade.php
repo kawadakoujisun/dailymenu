@@ -124,17 +124,21 @@
 <div class="calendar_frame">
     <div class="d-flex flex-row justify-content-between calendar_row">
         <div class="calendar_cell calendar_click_cell_arrow">
-            <a href="{{ route('contents.ChangeCalendar', ['page_no' => $pageNo, 'calendar_value' => $prevCalendarYearMonth]) }}">
-                <div class="calendar_text calendar_text_color_weekday">{{ '<' }}</div>
-            </a>
+            <div class="calendar_text">
+                <a href="{{ route('contents.ChangeCalendar', ['page_no' => $pageNo, 'calendar_value' => $prevCalendarYearMonth]) }}">
+                    <span class="calendar_text_color_weekday">{{ '<' }}</span>  {{-- 文字がリンクの色にならないようaの内側で文字色を設定する --}}
+                </a>
+            </div>
         </div>
         <div class="calendar_cell_month">
             <div class="calendar_text calendar_text_color_weekday">{{ $year . '年' . $month . '月' }}</div>
         </div>
         <div class="calendar_cell calendar_click_cell_arrow">
-            <a href="{{ route('contents.ChangeCalendar', ['page_no' => $pageNo, 'calendar_value' => $nextCalendarYearMonth]) }}">
-                <div class="calendar_text calendar_text_color_weekday">{{ '>' }}</div>
-            </a>
+            <div class="calendar_text">
+                <a href="{{ route('contents.ChangeCalendar', ['page_no' => $pageNo, 'calendar_value' => $nextCalendarYearMonth]) }}">
+                    <span class="calendar_text_color_weekday">{{ '>' }}</span>  {{-- 文字がリンクの色にならないようaの内側で文字色を設定する --}}
+                </a>
+            </div>
         </div>
     </div>
     
@@ -184,9 +188,11 @@
                         @if($existDayArray[$currDay])
                             <div class="calendar_cell calendar_click_cell">
                                 <?php $currDateValue = sprintf('%s-%02d', $calendarYearMonth, $currDay);  // 2021-04-30 ?>
-                                <a href="{{ route('contents.SelectDate', ['date_value' => $currDateValue, 'calendar_value' => $calendarYearMonth]) }}">
-                                    {!! '<div class="calendar_text ' . $calendarTextColorClass . '">' !!} {{ $currDay }} {!! '</div>' !!}
-                                </a>
+                                <div class="calendar_text">
+                                    <a href="{{ route('contents.SelectDate', ['date_value' => $currDateValue, 'calendar_value' => $calendarYearMonth]) }}">
+                                        {!! '<span class="' . $calendarTextColorClass . '">' !!}{{ $currDay }}{!! '</span>' !!}  {{-- 文字がリンクの色にならないようaの内側で文字色を設定する --}}
+                                    </a>
+                                </div>
                             </div>
                         @elseif($closeDayArray[$currDay])
                             <div class="calendar_cell calendar_close_cell">
