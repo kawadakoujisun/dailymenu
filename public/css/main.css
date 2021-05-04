@@ -43,12 +43,12 @@ body {
     height: auto;
 }
 
+/* .page_frame_paddingと一緒に使う */
 .page_frame {
     max-width: var(--content_max_width);
     background-color: #fff;
     border-radius: 10px;
     margin: 0 auto 12px;
-    padding: 10px;
 }
 
 .page_title {
@@ -232,6 +232,10 @@ body {
  */
 
 /* 768px以上 col-md- */
+.page_frame_padding {
+    padding: 10px 10px;
+}
+
 .sidebar {
     position: sticky;
     top: var(--restaurant_logo_height);
@@ -239,6 +243,10 @@ body {
 
 /* 768px未満 */
 @media (max-width: 767px) {
+    .page_frame_padding {
+        padding: 10px 4px;
+    }
+
     .sidebar {
         position: static;
         top: 0;

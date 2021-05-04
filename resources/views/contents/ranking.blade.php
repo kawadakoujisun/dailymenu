@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="page_frame">
+    <div class="page_frame page_frame_padding">
 
         <div class="mb-4">
             <div class="page_title">
@@ -23,7 +23,7 @@
         
         <div class="row" style="max-width: 984px; margin: auto;">
 
-            <div class="col-12">
+            <div class="col-12 p-0">
                 <div class="d-flex justify-content-center">
                     {{-- ページネーションのリンク --}}
                     {{ $joinedDishes->links() }}

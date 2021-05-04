@@ -6,7 +6,7 @@
         <img class="image_in_div" src="/images/restaurant_main_visual.jpg" alt="食堂">
     </div>
 
-    <div class="page_frame">
+    <div class="page_frame page_frame_padding">
         
         <div class="mb-4">
             <div class="page_title">
@@ -17,7 +17,7 @@
         <div class="row" style="max-width: 984px; margin: auto;">
     
             {{-- サイドバー --}}
-            <div class="col-md-4 order-md-2 mb-4">
+            <div class="col-md-4 order-md-2 mb-4 p-0">
                 <div class="sidebar">
                     <div style="position: relative; max-width: 360px; height: auto; margin: 0 auto 0;">
                         <div style="padding-top: 100%"></div>
@@ -31,7 +31,7 @@
             </div>
     
             {{-- メインコンテンツ --}}
-            <div class="col-md-8 order-md-1">
+            <div class="col-md-8 order-md-1 p-0">
                 <div class="d-flex justify-content-center">
                     {{-- ページネーションのリンク --}}
                     {{ $dates->appends(['calendar' => $calendarYearMonth])->links() }}

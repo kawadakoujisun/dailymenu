@@ -12,7 +12,7 @@
         {{-- ナビゲーションバー --}}
         @include('commons.navbar')
 
-        <div class="container">
+        <div class="container-fluid p-0">
             {{-- エラーメッセージ --}}
             @include('commons.error_messages')
 
