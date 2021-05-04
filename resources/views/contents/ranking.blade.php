@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    <?php
+        require_once(dirname(__FILE__)."/../../../app/contents/DisplayNumberUtil.php");  // 追加
+    ?>
 
     <div class="page_frame page_frame_padding">
 
@@ -39,7 +42,10 @@
                                 @include('commons.SpaceBeforeItemTitle')
                                 <div class="item_title">
                                     <div>
-                                        {!! '<h2 class="font_size_item_title">' !!}{{ '第' . $no . '位' }}{!! '</h2>' !!}
+                                        <?php
+                                            $displayNo = App\Contents\DisplayNumberUtil::getDisplayNumberString($no);
+                                        ?>
+                                        {!! '<h2 class="font_size_item_title">' !!}{{ '第' . $displayNo . '位' }}{!! '</h2>' !!}
                                     </div>
                                 </div>
                                 {{-- Dishの値、RequestCountの値、リクエストボタンを表示 --}}

@@ -57,6 +57,7 @@ body {
     margin: auto;
     text-align: center;
     color: var(--main_text_color);
+    font-family: 'RocknRoll One', sans-serif;
     text-shadow:
         1px 1px 4px var(--main_text_shadow_color);
 }
@@ -73,6 +74,7 @@ body {
     margin: 0;
     padding: 6px;
     color: #fff;
+    font-family: 'Kosugi Maru', sans-serif;
 }
 
 .space_bfore_item_title {
