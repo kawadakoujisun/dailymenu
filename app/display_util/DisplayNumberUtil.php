@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contents;
+namespace App\DisplayUtil;
 
 class DisplayNumberUtil
 {
