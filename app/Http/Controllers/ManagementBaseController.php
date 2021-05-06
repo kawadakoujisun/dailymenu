@@ -186,6 +186,20 @@ class ManagementBaseController extends Controller
     
     public function clearTmpResizeImage()
     {
+        /*
+        {
+            // コメントアウトしておくこと！
+            // デバッグ用に出力していたpublic/images/内のmy_log.txtを削除する。
+            // my_log.txtはapp/Http/Controllers/ManagementDatesController.phpのstoreNewDishで作ったもの。
+            $publicImagesDir = public_path('/images/');
+            $myLogFilePath = "$publicImagesDir" . "my_log.txt";
+            if(file_exists($myLogFilePath)) {
+                unlink($myLogFilePath);
+            }
+        }
+        */
+        
+        
         // storageの一時フォルダを削除する。
         $tmpDirPath = \Config::get('contents.ContentsDef.STORAGE_TMP_UPLOADS_DIR');
         if(\Storage::exists($tmpDirPath)) {

@@ -28,6 +28,25 @@ class ManagementDatesController extends Controller
     
     public function storeNewDish(Request $request)
     {
+        /*
+        {
+            // コメントアウトしておくこと！
+            // デバッグ用にpublic/images/内にmy_log.txtを出力する。
+            // ブラウザでhttps://.../images/my_log.txtを開けばmy_log.txtを見ることができる。
+            // app/Http/Controllers/ManagementBaseController.phpのclearTmpResizeImageにてmy_log.txtを削除する。
+            $publicImagesDir = public_path('/images/');
+            $myLogFile = new \SplFileObject("$publicImagesDir" . "my_log.txt", "w");
+            if(isset($request->selected_image_file)) {
+                $myLogFile->fwrite($request->selected_image_file . PHP_EOL);
+                $myLogFile->fwrite($request->selected_image_file->getClientOriginalName() . PHP_EOL);
+                $myLogFile->fwrite($request->selected_image_file->getMimeType() . PHP_EOL);
+            } else {
+                $myLogFile->fwrite('null' . PHP_EOL);
+            }
+        }
+        */
+        
+        
         // バリデーション
         $validateValueArray = \Config::get('contents.ContentsDef.requestValidateValueArray');
         $request->validate([
