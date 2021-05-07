@@ -72,6 +72,13 @@ class ManagementDishesController extends Controller
         // Dishを削除
         $dish->delete();
         
+        // 注意！
+        // 論理削除なのでdishはデータベースから消えてはいない。
+        // 論理削除されたdishのimage_url、image_public_idには値が残っているが、画像ファイルは既に削除済みなのでこれらの値は使用しないように！
+        
+        // 物理削除を試してみる（物理削除のときはdishが所有しているdate, requestCountも一緒に物理削除される）
+        //$dish->forceDelete();  // お試しコードなので必ずコメントアウトしておくこと！
+        
         // 前のURLへリダイレクト
         return back();
     }

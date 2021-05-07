@@ -631,7 +631,10 @@ class ContentsController extends Controller
         // Dishの登場回数appearance_countをカウントする期間
         list($startTime, $endTime) = $this->getAppearanceCountPeriod();
         
-        return Dish::leftJoin('dates', 'dishes.id', '=', 'dates.dish_id')
+        return Dish::leftJoin('dates', function($join){
+                $join->on('dishes.id', '=', 'dates.dish_id')
+                     ->whereNull('dates.deleted_at');  // join結合先の論理削除条件は自動ではセットされないので、自分でセットする。
+            })
             ->leftjoin('request_counts', 'dishes.id', '=', 'request_counts.dish_id')
             ->select(  // このselectに書いたものがDish型のカラムとして存在するようになった
                 'dishes.id',

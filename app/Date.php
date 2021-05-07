@@ -4,8 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\SoftDeletes;  // 追加
+
 class Date extends Model
 {
+    use SoftDeletes;  //　論理削除
+    
     protected $fillable = [
         'date',
     ];
